@@ -3,7 +3,7 @@ from tkinter import messagebox, END
 import bcrypt
 import sqlite3
 
-class BackEnd():
+class DB_Usuarios():
     def conecta_db(self):
 
         # Conecta ao banco de dados SQLite ou cria um novo se não existir
@@ -27,7 +27,6 @@ class BackEnd():
                 email TEXT NOT NULL UNIQUE,
                 username TEXT NOT NULL UNIQUE,
                 senha TEXT NOT NULL,
-                confirmar_senha TEXT NOT NULL,
                 telefone TEXT
             )
         """)
@@ -35,7 +34,7 @@ class BackEnd():
         print('Tabela criada com sucesso!')
         self.desconecta_db()
 
-class Application(BackEnd):
+class Application(DB_Usuarios):
     def __init__(self):
 
         self.janela = ctk.CTk()
@@ -119,6 +118,19 @@ class Application(BackEnd):
             return False
         return True
 
+    def check_usuarios(self, username_or_email, password):
+        self.conecta_db()
+        self.cursor.execute("""
+            SELECT * FROM Usuarios
+            WHERE username = ? OR email = ?""", (username_or_email, username_or_email))
+        result = self.cursor.fetchone()
+        self.desconecta_db()
+
+        if result:
+            self.hashed_password = result[0]
+            return self.check_password(password, self.hashed_password)
+        return False
+
     def tela_register(self):
         # Remove o frame de login
         self.login_frame.pack_forget()
@@ -188,21 +200,28 @@ class Application(BackEnd):
             self.email_cadastro = self.email_entry_reg.get()
             self.username_cadastro = self.username_entry_reg.get()
             self.senha_cadastro = self.password_entry_reg.get()
-            self.confirmar_senha_cadastro = self.cPassword_entry_reg.get()
             self.telefone_cadastro = self.phone_entry_reg.get()
 
-            print(self.name_cadastro)
+            print(f'Usuário {self.username_cadastro} cadastrado com sucesso!')
+
+            self.password_encrypt = self.hash_password(self.senha_cadastro)
 
             self.conecta_db()
 
             self.cursor.execute("""
-                INSERT INTO Usuarios (nome, email, username, senha, confirmar_senha, telefone)
-                VALUES (?, ?, ?, ?, ?, ?)""", (self.name_cadastro, self.email_cadastro, self.username_cadastro, self.senha_cadastro, self.confirmar_senha_cadastro, self.telefone_cadastro))
+                INSERT INTO Usuarios (nome, email, username, senha, telefone)
+                VALUES (?, ?, ?, ?, ?)""", (self.name_cadastro, self.email_cadastro, self.username_cadastro, self.password_encrypt.decode('utf-8'), self.telefone_cadastro))
             
             self.conn.commit()
             print('Dados inseridos com sucesso!')
             self.desconecta_db()
+
+            messagebox.showinfo(title='Estado de Cadastro', message='Usuário Cadastrado com Sucesso')
+
+            self.clear_entry_register()
         else:
+            messagebox.showerror(title='ERRO', message='Não foi possível cadastrar o usuário.')
+
             print('Não foi possível cadastrar o usuário.')
 
     def voltar_login(self):
@@ -230,4 +249,14 @@ class Application(BackEnd):
         self.cPassword_entry_reg.delete(0, END)
         self.phone_entry_reg.delete(0, END)
 
+    def hash_password(self, password):
+        self.password = password.encode()
+        self.salt = bcrypt.gensalt()
+        return bcrypt.hashpw(self.password, self.salt)
+    
+    def check_password(self, password, hashed_password):
+        if isinstance(hashed_password, str):
+            hashed_password = hashed_password.encode('utf-8')
+        return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
+        
 Application()
