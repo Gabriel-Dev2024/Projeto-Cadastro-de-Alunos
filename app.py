@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from customtkinter import *
 from tkinter import messagebox, END
 import bcrypt
 import sqlite3
@@ -81,7 +82,7 @@ class Application(DB_Usuarios):
         self.show_check.place(x=300, y=253)
 
         # Botão de Login
-        login_button = ctk.CTkButton(master=self.login_frame, text='Login', width=300, command=self.login)
+        login_button = ctk.CTkButton(master=self.login_frame, text='Login', width=300, command=self.pagina_principal) # Colocar a função de login
         login_button.place(x=85, y=300)
 
         register_span = ctk.CTkLabel(master=self.login_frame, text='Recuperar senha', width=155)
@@ -103,11 +104,10 @@ class Application(DB_Usuarios):
                 messagebox.showinfo(title='Estado de Login', message='Login Feito com Sucesso')
                 print(f'{username_or_email} Login feito com sucesso')
                 self.clear_entry_login()
+                self.pagina_principal()
             else:
                 messagebox.showerror(title='ERRO', message='Nome de Usuario ou Senha Incorretos')
                 print(f'{username_or_email} Falha ao fazer o Login')
-                return False
-            return True
 
     def check_usuarios(self, username_or_email, password):
         self.conecta_db()
@@ -270,9 +270,27 @@ class Application(DB_Usuarios):
         return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
         
 
-    
-    def pagina_info_pessoais(self):
 
-        # Remove o frame de login
+    def pagina_principal(self):
         self.login_frame.pack_forget()
+
+        self.janela.geometry('1000x900')
+
+        self.pag_principal_frame = ctk.CTkFrame(master=self.janela, width=800, height=900, fg_color='#0B42EC')
+        self.pag_principal_frame.pack()
+
+        self.tabview = ctk.CTkTabview(master=self.pag_principal_frame)
+        self.tabview.pack(padx=250, pady=330)
+
+        self.tabview.add('Pagina Principal')
+        self.tabview.add('Cadastrar Alunos')
+        self.tabview.add('Consultar Alunos')
+
+        label1 = ctk.CTkLabel(master=self.tabview.tab('Pagina Principal'), text='Pagina Principal', font=('Arial', 24))
+        label1.place(x=100, y=40)
+
+
+    
+    #def pagina_info_pessoais(self):
+
 Application()
