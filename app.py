@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from customtkinter import *
 from tkinter import messagebox, END
 import bcrypt
 import sqlite3
@@ -15,9 +16,10 @@ class DB_Usuarios():
 
         # Fecha a conexão com o banco de dados
         self.conn.close()
-        print('Banco de dados desconectado com sucesso!')
 
     def cria_tabela(self):
+
+        # Cria a tabela Usuarios se ela não existir no banco de dados
         self.conecta_db()
 
         self.cursor.execute("""
@@ -80,7 +82,7 @@ class Application(DB_Usuarios):
         self.show_check.place(x=300, y=253)
 
         # Botão de Login
-        login_button = ctk.CTkButton(master=self.login_frame, text='Login', width=300, command=self.login)
+        login_button = ctk.CTkButton(master=self.login_frame, text='Login', width=300, command=self.pagina_principal) # Colocar a função de login
         login_button.place(x=85, y=300)
 
         register_span = ctk.CTkLabel(master=self.login_frame, text='Recuperar senha', width=155)
@@ -102,9 +104,25 @@ class Application(DB_Usuarios):
                 messagebox.showinfo(title='Estado de Login', message='Login Feito com Sucesso')
                 print(f'{username_or_email} Login feito com sucesso')
                 self.clear_entry_login()
+                self.pagina_principal()
             else:
                 messagebox.showerror(title='ERRO', message='Nome de Usuario ou Senha Incorretos')
                 print(f'{username_or_email} Falha ao fazer o Login')
+
+    def check_usuarios(self, username_or_email, password):
+        self.conecta_db()
+
+        # Procura a senha e o username_or_email na tabela de usuarios
+        self.cursor.execute("""
+            SELECT senha FROM Usuarios
+            WHERE username = ? OR email = ?""", (username_or_email, username_or_email))
+        result = self.cursor.fetchone()
+        self.desconecta_db()
+
+        if result:
+            self.hashed_password = result[0]
+            return self.check_password(password, self.hashed_password)
+        return False
 
     def validator_login(self):
 
@@ -117,19 +135,19 @@ class Application(DB_Usuarios):
             messagebox.showerror(title='ERRO', message='Preencha com seus dados')
             return False
         return True
+    
+    def show_password(self):
+        if self.show_check.get():
+            self.password_entry.configure(show='')
+        else:
+            self.password_entry.configure(show='*')
 
-    def check_usuarios(self, username_or_email, password):
-        self.conecta_db()
-        self.cursor.execute("""
-            SELECT * FROM Usuarios
-            WHERE username = ? OR email = ?""", (username_or_email, username_or_email))
-        result = self.cursor.fetchone()
-        self.desconecta_db()
+    def clear_entry_login(self):
+        self.username_entry.delete(0, END)
+        self.password_entry.delete(0, END)
 
-        if result:
-            self.hashed_password = result[0]
-            return self.check_password(password, self.hashed_password)
-        return False
+
+
 
     def tela_register(self):
         # Remove o frame de login
@@ -172,6 +190,37 @@ class Application(DB_Usuarios):
         save_button = ctk.CTkButton(master=self.rg_frame, text='Cadastrar', width=145, fg_color='green', hover_color='#014B05', command=self.cadastrar_usuarios)
         save_button.place(x=240, y=370)
 
+    def cadastrar_usuarios(self):
+        if self.validator_register():
+            self.name_cadastro = self.name_entry_reg.get()
+            self.email_cadastro = self.email_entry_reg.get()
+            self.username_cadastro = self.username_entry_reg.get()
+            self.senha_cadastro = self.password_entry_reg.get()
+            self.telefone_cadastro = self.phone_entry_reg.get()
+
+            print(f'Usuário {self.username_cadastro} cadastrado com sucesso!')
+
+            self.password_encrypt = self.hash_password(self.senha_cadastro)
+
+            self.conecta_db()
+
+            # Inseri as informações no banco de dados
+            self.cursor.execute("""
+                INSERT INTO Usuarios (nome, email, username, senha, telefone)
+                VALUES (?, ?, ?, ?, ?)""", (self.name_cadastro, self.email_cadastro, self.username_cadastro, self.password_encrypt.decode(), self.telefone_cadastro))
+            
+            self.conn.commit()
+            print('Dados inseridos com sucesso!')
+            self.desconecta_db()
+
+            messagebox.showinfo(title='Estado de Cadastro', message='Usuário Cadastrado com Sucesso')
+
+            self.clear_entry_register()
+        else:
+            messagebox.showerror(title='ERRO', message='Não foi possível cadastrar o usuário.')
+
+            print('Não foi possível cadastrar o usuário.')
+
     def validator_register(self):
         name = self.name_entry_reg.get().strip()
         email = self.email_entry_reg.get().strip()
@@ -193,37 +242,7 @@ class Application(DB_Usuarios):
             messagebox.showerror(title='ERRO', message='Você deve aceitar os termos de usos')
             return False
         return True
-
-    def cadastrar_usuarios(self):
-        if self.validator_register():
-            self.name_cadastro = self.name_entry_reg.get()
-            self.email_cadastro = self.email_entry_reg.get()
-            self.username_cadastro = self.username_entry_reg.get()
-            self.senha_cadastro = self.password_entry_reg.get()
-            self.telefone_cadastro = self.phone_entry_reg.get()
-
-            print(f'Usuário {self.username_cadastro} cadastrado com sucesso!')
-
-            self.password_encrypt = self.hash_password(self.senha_cadastro)
-
-            self.conecta_db()
-
-            self.cursor.execute("""
-                INSERT INTO Usuarios (nome, email, username, senha, telefone)
-                VALUES (?, ?, ?, ?, ?)""", (self.name_cadastro, self.email_cadastro, self.username_cadastro, self.password_encrypt.decode('utf-8'), self.telefone_cadastro))
-            
-            self.conn.commit()
-            print('Dados inseridos com sucesso!')
-            self.desconecta_db()
-
-            messagebox.showinfo(title='Estado de Cadastro', message='Usuário Cadastrado com Sucesso')
-
-            self.clear_entry_register()
-        else:
-            messagebox.showerror(title='ERRO', message='Não foi possível cadastrar o usuário.')
-
-            print('Não foi possível cadastrar o usuário.')
-
+    
     def voltar_login(self):
             # Remove o frame de registro
             self.rg_frame.pack_forget()
@@ -231,16 +250,11 @@ class Application(DB_Usuarios):
             # Devolve o frame de login
             self.login_frame.pack()
     
-    def show_password(self):
-        if self.show_check.get():
-            self.password_entry.configure(show='')
-        else:
-            self.password_entry.configure(show='*')
-
-    def clear_entry_login(self):
-        self.username_entry.delete(0, END)
-        self.password_entry.delete(0, END)
-
+    def check_password(self, password, hashed_password):
+            if isinstance(hashed_password, str):
+                hashed_password = hashed_password.encode('utf-8')
+            return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
+    
     def clear_entry_register(self):
         self.name_entry_reg.delete(0, END)
         self.email_entry_reg.delete(0, END)
@@ -254,9 +268,27 @@ class Application(DB_Usuarios):
         self.salt = bcrypt.gensalt()
         return bcrypt.hashpw(self.password, self.salt)
     
-    def check_password(self, password, hashed_password):
-        if isinstance(hashed_password, str):
-            hashed_password = hashed_password.encode('utf-8')
-        return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
+    
         
+
+    def pagina_principal(self):
+        self.login_frame.pack_forget()
+        self.janela.geometry('850x600')
+
+        self.pag_principal_frame = ctk.CTkFrame(master=self.janela, width=750, height=800, fg_color='#0B42EC')
+        self.pag_principal_frame.pack()
+
+        self.pag_principal_frame2 = ctk.CTkFrame(master=self.janela, width=625, height=500, fg_color='#fff')
+        self.pag_principal_frame2.place(x=110, y=100)
+
+        button_pag_principal = ctk.CTkButton(master=self.pag_principal_frame, text='Pagina Principal', font=('Arial', 20))
+        button_pag_principal.place(x=60, y=50)
+
+        button_pag_cadastrar_alunos = ctk.CTkButton(master=self.pag_principal_frame, text='Cadastrar Alunos', font=('Arial', 20))
+        button_pag_cadastrar_alunos.place(x=290, y=50)
+
+        button_pag_consultar_alunos = ctk.CTkButton(master=self.pag_principal_frame, text='Consultar Alunos', font=('Arial', 20))
+        button_pag_consultar_alunos.place(x=520, y=50)
+
+
 Application()
