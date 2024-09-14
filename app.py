@@ -64,7 +64,7 @@ class Application(DB_Usuarios):
 
         # Widgets do frame de login
         label = ctk.CTkLabel(master=self.login_frame, text='Página de Login', font=('Arial', 24), text_color='white')
-        label.place(x=150, y=20)
+        label.place(x=150, y=40)
 
         self.username_entry = ctk.CTkEntry(master=self.login_frame, placeholder_text='Nome do Usuário ou Email', width=300, font=('Arial', 16))
         self.username_entry.place(x=85, y=120)
@@ -81,14 +81,14 @@ class Application(DB_Usuarios):
         self.show_check.place(x=300, y=253)
 
         # Botão de Login
-        login_button = ctk.CTkButton(master=self.login_frame, text='Login', width=300, hover_color='#0159A9', command=self.criar_pagina_principal) # Colocar a função de login
+        login_button = ctk.CTkButton(master=self.login_frame, text='Login', width=300, hover_color='#0159A9', font=('Arial', 20), command=self.criar_pagina_principal) # Colocar a função de login
         login_button.place(x=85, y=300)
 
         register_span = ctk.CTkLabel(master=self.login_frame, text='Recuperar senha', width=155, text_color='white')
         register_span.place(x=80, y=340)
 
         # Botão de Cadastro
-        register_button = ctk.CTkButton(master=self.login_frame, text='Cadastre-se', width=155, fg_color='green', hover_color='#014B05', command=self.tela_register)
+        register_button = ctk.CTkButton(master=self.login_frame, text='Cadastre-se', width=155, fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.tela_register)
         register_button.place(x=230, y=340)
 
     def login(self):
@@ -157,37 +157,37 @@ class Application(DB_Usuarios):
         self.rg_frame.pack()
 
         label = ctk.CTkLabel(master=self.rg_frame, text='Página de Cadastro', font=('Arial', 24), text_color='white')
-        label.place(x=130, y=20)
+        label.place(x=130, y=40)
 
         self.name_entry_reg = ctk.CTkEntry(master=self.rg_frame, placeholder_text='Nome completo', width=300, font=('Arial', 16))
-        self.name_entry_reg.place(x=85, y=80)
+        self.name_entry_reg.place(x=85, y=110)
 
         self.email_entry_reg = ctk.CTkEntry(master=self.rg_frame, placeholder_text='Email do Usuário', width=300, font=('Arial', 16))
-        self.email_entry_reg.place(x=85, y=120)
+        self.email_entry_reg.place(x=85, y=150)
 
         self.username_entry_reg = ctk.CTkEntry(master=self.rg_frame, placeholder_text='Nome do Usuário', width=300, font=('Arial', 16))
-        self.username_entry_reg.place(x=85, y=160)
+        self.username_entry_reg.place(x=85, y=190)
 
         self.password_entry_reg = ctk.CTkEntry(master=self.rg_frame, placeholder_text='Senha do Usuário', width=300, font=('Arial', 16), show='*')
-        self.password_entry_reg.place(x=85, y=200)
+        self.password_entry_reg.place(x=85, y=230)
 
         self.cPassword_entry_reg = ctk.CTkEntry(master=self.rg_frame, placeholder_text='Confirma a Senha', width=300, font=('Arial', 16), show='*')
-        self.cPassword_entry_reg.place(x=85, y=240)
+        self.cPassword_entry_reg.place(x=85, y=270)
 
         self.phone_entry_reg = ctk.CTkEntry(master=self.rg_frame, placeholder_text='Telefone (Opcional)', width=300, font=('Arial', 16))
-        self.phone_entry_reg.place(x=85, y=280)
+        self.phone_entry_reg.place(x=85, y=310)
 
         # CheckBox para Termos de Uso e Política de Privacidade
         self.termos_e_politicas = ctk.CTkCheckBox(master=self.rg_frame, text='Termos de Usos e Políticas de Privacidade', width=100, text_color='white', hover_color='#0159A9')
-        self.termos_e_politicas.place(x=85, y=320)
+        self.termos_e_politicas.place(x=85, y=350)
 
         # Botão para Voltar
-        back_button = ctk.CTkButton(master=self.rg_frame, text='Voltar', width=145, fg_color='gray', hover_color='#202020', command=self.voltar_login)
-        back_button.place(x=85, y=370)
+        back_button = ctk.CTkButton(master=self.rg_frame, text='Voltar', width=145, fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_login)
+        back_button.place(x=85, y=400)
 
         # Botão para Cadastrar
-        save_button = ctk.CTkButton(master=self.rg_frame, text='Cadastrar', width=145, fg_color='green', hover_color='#014B05', command=self.cadastrar_usuarios)
-        save_button.place(x=240, y=370)
+        save_button = ctk.CTkButton(master=self.rg_frame, text='Cadastrar', width=145, fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.cadastrar_usuarios)
+        save_button.place(x=240, y=400)
 
     def cadastrar_usuarios(self):
         if self.validator_register():
@@ -293,6 +293,7 @@ class Application(DB_Usuarios):
         label_mensagem.pack(pady=(50, 0))
 
 
+
     def criar_cadastrar_alunos(self):
         self.pagina_principal_frame.pack_forget()
 
@@ -303,12 +304,57 @@ class Application(DB_Usuarios):
         label_title = ctk.CTkLabel(master=self.pagina_cadastrar_alunos_frame, text='Pagina de Cadastro de Alunos', font=('Arial', 32), text_color='black')
         label_title.pack(pady=(50, 0))
 
-        button_cadastrar = ctk.CTkButton(master=self.pagina_cadastrar_alunos_frame, text='Cadastrar Aluno', hover_color='#0159A9', font=('Arial', 20), anchor='w')
+        button_cadastrar = ctk.CTkButton(master=self.pagina_cadastrar_alunos_frame, text='Cadastrar Aluno', hover_color='#0159A9', font=('Arial', 20), anchor='w', command=self.cadastrar_aluno)
         button_cadastrar.pack(pady=(50, 0))
 
         button_voltar = ctk.CTkButton(master=self.pagina_cadastrar_alunos_frame, width=70, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_do_cadastro)
         button_voltar.pack(pady=(50, 0))
 
+    def cadastrar_aluno(self):
+        self.pagina_cadastrar_alunos_frame.pack_forget()
+        self.side_bar_pag.pack_forget()
+
+        self.cadastrar_aluno_frame = ctk.CTkFrame(master=self.janela, width=550, height=670, fg_color='#006CBB')
+        self.cadastrar_aluno_frame.pack_propagate(0)
+        self.cadastrar_aluno_frame.pack()
+
+        label_title = ctk.CTkLabel(master=self.cadastrar_aluno_frame, text='Informações Pessoais', font=('Arial', 32), text_color='white')
+        label_title.pack(pady=(40, 0))
+
+        self.nome_completo_aluno = ctk.CTkEntry(master=self.cadastrar_aluno_frame, placeholder_text='Nome Completo do Aluno', width=400, font=('Arial', 16))
+        self.nome_completo_aluno.pack(anchor='center', pady=(60, 0))
+
+        self.data_nascimento = ctk.CTkEntry(master=self.cadastrar_aluno_frame, placeholder_text='Data de Nascimento (Ex: 00/00/0000)', width=400, font=('Arial', 16))
+        self.data_nascimento.pack(anchor='center', pady=(20, 0))
+
+        self.genero = ctk.CTkComboBox(master=self.cadastrar_aluno_frame, values=['Masculino', 'Feminino'])
+        self.genero.pack(anchor='center', pady=(20, 0))
+
+        self.cpf = ctk.CTkEntry(master=self.cadastrar_aluno_frame, placeholder_text='CPF (Ex: 000.000.000-00)', width=400, font=('Arial', 16))
+        self.cpf.pack(anchor='center', pady=(20, 0))
+
+        self.rg = ctk.CTkEntry(master=self.cadastrar_aluno_frame, placeholder_text='RG (Ex: 00.000.000-00)', width=400, font=('Arial', 16))
+        self.rg.pack(anchor='center', pady=(20, 0))
+
+        self.nacionalidade = ctk.CTkEntry(master=self.cadastrar_aluno_frame, placeholder_text='Nacionalidade', width=400, font=('Arial', 16))
+        self.nacionalidade.pack(anchor='center', pady=(20, 0))
+
+        self.naturalidade = ctk.CTkEntry(master=self.cadastrar_aluno_frame, placeholder_text='Naturalidade (Cidade/Estado)', width=400, font=('Arial', 16))
+        self.naturalidade.pack(anchor='center', pady=(20, 0))
+
+        self.estado_civil = ctk.CTkComboBox(master=self.cadastrar_aluno_frame, values=['Solteiro', 'Casado', 'Divorciado', 'Viúvo'])
+        self.estado_civil.pack(anchor='center', pady=(20, 0))
+
+        button_proxima_pagina = ctk.CTkButton(master=self.cadastrar_aluno_frame, text='Próxima Página', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20))
+        button_proxima_pagina.place(x=280, y=550)
+
+        button_voltar = ctk.CTkButton(master=self.cadastrar_aluno_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20))
+        button_voltar.place(x=130, y=550)
+
+
+    def voltar_do_cadastro(self):
+        self.pagina_cadastrar_alunos_frame.pack_forget()
+        self.pagina_principal_frame.pack()
 
     def criar_consultar_alunos(self):
         self.pagina_principal_frame.pack_forget()
@@ -323,38 +369,22 @@ class Application(DB_Usuarios):
         button_voltar = ctk.CTkButton(master=self.pagina_consultar_alunos_frame, width=70, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_da_consulta)
         button_voltar.pack(pady=(50, 0))
     
-    def side_bar(self):
-        self.side_bar_pag_principal = ctk.CTkFrame(master=self.janela, width=180, height=680, fg_color='#006CBB', corner_radius=0)
-        self.side_bar_pag_principal.pack_propagate(0)
-        self.side_bar_pag_principal.pack(fill='y', anchor='w', side='left')
-
-        button_pag_cadastrar_alunos = ctk.CTkButton(master=self.side_bar_pag_principal, text='Cadastrar Alunos', hover_color='#0159A9', fg_color='transparent', font=('Arial', 20), anchor='w', command=self.criar_cadastrar_alunos)
-        button_pag_cadastrar_alunos.pack(anchor='center', ipady=5, pady=(50, 10))
-
-        button_pag_consultar_alunos = ctk.CTkButton(master=self.side_bar_pag_principal, text='Consultar Alunos', hover_color='#0159A9', fg_color='transparent', font=('Arial', 20), anchor='w', command=self.criar_consultar_alunos)
-        button_pag_consultar_alunos.pack(anchor='center', ipady=5, pady=(16, 10))
-
-        button_sair_da_conta = ctk.CTkButton(master=self.side_bar_pag_principal, text='Sair da Conta', hover_color='#0159A9', fg_color='transparent', font=('Arial', 20), anchor='w', command=self.sair_da_conta)
-        button_sair_da_conta.pack(anchor='center', ipady=5, pady=(420, 10))
-
-    def voltar_do_cadastro(self):
-        self.pagina_cadastrar_alunos_frame.pack_forget()
-        self.pagina_principal_frame.pack()
-
     def voltar_da_consulta(self):
         self.pagina_consultar_alunos_frame.pack_forget()
         self.pagina_principal_frame.pack()
 
-    def sair_da_conta(self):
-        # Esconde a tela atual e exibe a tela de login
-        if hasattr(self, 'pagina_principal_frame'):
-            self.pagina_principal_frame.pack_forget()
-        if hasattr(self, 'pagina_cadastrar_alunos_frame'):
-            self.pagina_cadastrar_alunos_frame.pack_forget()
-        if hasattr(self, 'pagina_consultar_alunos_frame'):
-            self.pagina_consultar_alunos_frame.pack_forget()
+    def side_bar(self):
+        self.side_bar_pag = ctk.CTkFrame(master=self.janela, width=180, height=680, fg_color='#006CBB')
+        self.side_bar_pag.pack_propagate(0)
+        self.side_bar_pag.pack(fill='y', anchor='w', side='left')
 
-        self.login_frame.pack()
+        button_pag_cadastrar_alunos = ctk.CTkButton(master=self.side_bar_pag, text='Cadastrar Alunos', hover_color='#0159A9', fg_color='transparent', font=('Arial', 20), anchor='w', command=self.criar_cadastrar_alunos)
+        button_pag_cadastrar_alunos.pack(anchor='center', ipady=5, pady=(50, 10))
 
+        button_pag_consultar_alunos = ctk.CTkButton(master=self.side_bar_pag, text='Consultar Alunos', hover_color='#0159A9', fg_color='transparent', font=('Arial', 20), anchor='w', command=self.criar_consultar_alunos)
+        button_pag_consultar_alunos.pack(anchor='center', ipady=5, pady=(16, 10))
+
+        button_sair_da_conta = ctk.CTkButton(master=self.side_bar_pag, text='Sair da Conta', hover_color='#0159A9', fg_color='transparent', font=('Arial', 20), anchor='w')
+        button_sair_da_conta.pack(anchor='center', ipady=5, pady=(420, 10))
 
 Application()
