@@ -4,6 +4,7 @@ from tkinter import messagebox, END
 import bcrypt
 import sqlite3
 
+
 class DB_Usuarios():
     def conecta_db(self):
 
@@ -304,52 +305,68 @@ class Application(DB_Usuarios):
         label_title = ctk.CTkLabel(master=self.pagina_cadastrar_alunos_frame, text='Pagina de Cadastro de Alunos', font=('Arial', 32), text_color='black')
         label_title.pack(pady=(50, 0))
 
-        button_cadastrar = ctk.CTkButton(master=self.pagina_cadastrar_alunos_frame, text='Cadastrar Aluno', hover_color='#0159A9', font=('Arial', 20), anchor='w', command=self.cadastrar_aluno)
+        button_cadastrar = ctk.CTkButton(master=self.pagina_cadastrar_alunos_frame, text='Cadastrar Aluno', hover_color='#0159A9', font=('Arial', 20), anchor='w', command=self.informacoes_pessoais)
         button_cadastrar.pack(pady=(50, 0))
 
         button_voltar = ctk.CTkButton(master=self.pagina_cadastrar_alunos_frame, width=70, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_do_cadastro)
         button_voltar.pack(pady=(50, 0))
 
-    def cadastrar_aluno(self):
+    def informacoes_pessoais(self):
         self.pagina_cadastrar_alunos_frame.pack_forget()
         self.side_bar_pag.pack_forget()
 
-        self.cadastrar_aluno_frame = ctk.CTkFrame(master=self.janela, width=550, height=670, fg_color='#006CBB')
-        self.cadastrar_aluno_frame.pack_propagate(0)
-        self.cadastrar_aluno_frame.pack()
+        self.informacoes_pessoais_frame = ctk.CTkFrame(master=self.janela, width=550, height=670, fg_color='#006CBB')
+        self.informacoes_pessoais_frame.pack_propagate(0)
+        self.informacoes_pessoais_frame.pack()
 
-        label_title = ctk.CTkLabel(master=self.cadastrar_aluno_frame, text='Informações Pessoais', font=('Arial', 32), text_color='white')
+        label_title = ctk.CTkLabel(master=self.informacoes_pessoais_frame, text='Informações Pessoais', font=('Arial', 32), text_color='white')
         label_title.pack(pady=(40, 0))
 
-        self.nome_completo_aluno = ctk.CTkEntry(master=self.cadastrar_aluno_frame, placeholder_text='Nome Completo do Aluno', width=400, font=('Arial', 16))
+        self.nome_completo_aluno = ctk.CTkEntry(master=self.informacoes_pessoais_frame, placeholder_text='Nome Completo do Aluno', width=400, font=('Arial', 16))
         self.nome_completo_aluno.pack(anchor='center', pady=(60, 0))
 
-        self.data_nascimento = ctk.CTkEntry(master=self.cadastrar_aluno_frame, placeholder_text='Data de Nascimento (Ex: 00/00/0000)', width=400, font=('Arial', 16))
+        self.data_nascimento = ctk.CTkEntry(master=self.informacoes_pessoais_frame, placeholder_text='Data de Nascimento (Ex: 00/00/0000)', width=400, font=('Arial', 16))
         self.data_nascimento.pack(anchor='center', pady=(20, 0))
 
-        self.genero = ctk.CTkComboBox(master=self.cadastrar_aluno_frame, values=['Masculino', 'Feminino'])
+        self.genero = ctk.CTkComboBox(master=self.informacoes_pessoais_frame, values=['Masculino', 'Feminino'])
         self.genero.pack(anchor='center', pady=(20, 0))
 
-        self.cpf = ctk.CTkEntry(master=self.cadastrar_aluno_frame, placeholder_text='CPF (Ex: 000.000.000-00)', width=400, font=('Arial', 16))
+        self.cpf = ctk.CTkEntry(master=self.informacoes_pessoais_frame, placeholder_text='CPF (Ex: 000.000.000-00)', width=400, font=('Arial', 16))
         self.cpf.pack(anchor='center', pady=(20, 0))
 
-        self.rg = ctk.CTkEntry(master=self.cadastrar_aluno_frame, placeholder_text='RG (Ex: 00.000.000-00)', width=400, font=('Arial', 16))
+        self.rg = ctk.CTkEntry(master=self.informacoes_pessoais_frame, placeholder_text='RG (Ex: 00.000.000-00)', width=400, font=('Arial', 16))
         self.rg.pack(anchor='center', pady=(20, 0))
 
-        self.nacionalidade = ctk.CTkEntry(master=self.cadastrar_aluno_frame, placeholder_text='Nacionalidade', width=400, font=('Arial', 16))
+        self.nacionalidade = ctk.CTkEntry(master=self.informacoes_pessoais_frame, placeholder_text='Nacionalidade', width=400, font=('Arial', 16))
         self.nacionalidade.pack(anchor='center', pady=(20, 0))
 
-        self.naturalidade = ctk.CTkEntry(master=self.cadastrar_aluno_frame, placeholder_text='Naturalidade (Cidade/Estado)', width=400, font=('Arial', 16))
+        self.naturalidade = ctk.CTkEntry(master=self.informacoes_pessoais_frame, placeholder_text='Naturalidade (Cidade/Estado)', width=400, font=('Arial', 16))
         self.naturalidade.pack(anchor='center', pady=(20, 0))
 
-        self.estado_civil = ctk.CTkComboBox(master=self.cadastrar_aluno_frame, values=['Solteiro', 'Casado', 'Divorciado', 'Viúvo'])
+        self.estado_civil = ctk.CTkComboBox(master=self.informacoes_pessoais_frame, values=['Solteiro', 'Casado', 'Divorciado', 'Viúvo'])
         self.estado_civil.pack(anchor='center', pady=(20, 0))
 
-        button_proxima_pagina = ctk.CTkButton(master=self.cadastrar_aluno_frame, text='Próxima Página', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20))
+        button_proxima_pagina = ctk.CTkButton(master=self.informacoes_pessoais_frame, text='Próxima Página', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.reconhecimento)
         button_proxima_pagina.place(x=280, y=550)
 
-        button_voltar = ctk.CTkButton(master=self.cadastrar_aluno_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20))
+        button_voltar = ctk.CTkButton(master=self.informacoes_pessoais_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20))
         button_voltar.place(x=130, y=550)
+
+    def reconhecimento(self):
+        self.informacoes_pessoais_frame.pack_forget()
+        
+        self.reconhecimento_frame = ctk.CTkFrame(master=self.janela, width=550, height=670, fg_color='#006CBB')
+        self.reconhecimento_frame.pack_propagate(0)
+        self.reconhecimento_frame.pack()
+
+        label_title = ctk.CTkLabel(master=self.reconhecimento_frame, text='Reconhecimento Facial', font=('Arial', 32), text_color='white')
+        label_title.pack(pady=(40, 0))
+
+        label_info = ctk.CTkLabel(master=self.reconhecimento_frame, text='Clique no botão para tirar suas fotos para fazer o reconhecimento facial', font=('Arial', 16), text_color='white')
+        label_info.pack(pady=(40, 0))
+
+        button_tirar_fotos = ctk.CTkButton(master=self.reconhecimento_frame, text='Tirar Fotos', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20))
+        button_tirar_fotos.pack(pady=(30, 0))
 
 
     def voltar_do_cadastro(self):
