@@ -365,7 +365,7 @@ class Application(DB_Usuarios):
         label_info = ctk.CTkLabel(master=self.reconhecimento_frame, text='Clique no botão para tirar suas fotos para fazer o reconhecimento facial', font=('Arial', 16), text_color='white')
         label_info.pack(pady=(40, 0))
 
-        button_tirar_fotos = ctk.CTkButton(master=self.reconhecimento_frame, text='Tirar Fotos', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20))
+        button_tirar_fotos = ctk.CTkButton(master=self.reconhecimento_frame, text='Tirar Fotos', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.tirar_fotos)
         button_tirar_fotos.pack(pady=(30, 0))
 
 
@@ -403,5 +403,9 @@ class Application(DB_Usuarios):
 
         button_sair_da_conta = ctk.CTkButton(master=self.side_bar_pag, text='Sair da Conta', hover_color='#0159A9', fg_color='transparent', font=('Arial', 20), anchor='w')
         button_sair_da_conta.pack(anchor='center', ipady=5, pady=(420, 10))
+
+    def tirar_fotos(self):
+        from tirar_fotos import Tirar_Fotos
+
 
 Application()
