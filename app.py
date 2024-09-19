@@ -2,41 +2,7 @@ import customtkinter as ctk
 from customtkinter import *
 from tkinter import messagebox, END
 import bcrypt
-import sqlite3
-
-
-class DB_Usuarios():
-    def conecta_db(self):
-
-        # Conecta ao banco de dados SQLite ou cria um novo se não existir
-        self.conn = sqlite3.connect('Usuarios.db')
-        self.cursor = self.conn.cursor()
-        print('Banco de dados conectado com sucesso!')
-
-    def desconecta_db(self):
-
-        # Fecha a conexão com o banco de dados
-        self.conn.close()
-
-    def cria_tabela(self):
-
-        # Cria a tabela Usuarios se ela não existir no banco de dados
-        self.conecta_db()
-
-
-        self.cursor.execute("""
-            CREATE TABLE IF NOT EXISTS Usuarios(
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nome TEXT NOT NULL,
-                email TEXT NOT NULL UNIQUE,
-                username TEXT NOT NULL UNIQUE,
-                senha TEXT NOT NULL,
-                telefone TEXT
-            )
-        """)
-        self.conn.commit()
-        print('Tabela criada com sucesso!')
-        self.desconecta_db()
+from DataBase.usuarios_db import DB_Usuarios
 
 class Application(DB_Usuarios):
     def __init__(self):
@@ -146,6 +112,11 @@ class Application(DB_Usuarios):
         self.username_entry.delete(0, END)
         self.password_entry.delete(0, END)
 
+    def check_password(self, password, hashed_password):
+            if isinstance(hashed_password, str):
+                hashed_password = hashed_password.encode('utf-8')
+            return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
+
 
 
 
@@ -198,15 +169,20 @@ class Application(DB_Usuarios):
             self.senha_cadastro = self.password_entry_reg.get()
             self.telefone_cadastro = self.phone_entry_reg.get()
 
+            self.conecta_db()
+
+            self.cursor.execute("SELECT * FROM Usuarios WHERE username = ? OR email = ?", (self.username_cadastro, self.email_cadastro))
+            self.usuario_existente = self.cursor.fetchone()
+
+            if self.usuario_existente:
+                messagebox.showerror(title='ERRO', message='Usuário ou Email já existem.')
+                print('Usuario ou Email já existem.')
+                self.desconecta_db()
+                return
 
             print(f'Usuário {self.username_cadastro} cadastrado com sucesso!')
 
-
             self.password_encrypt = self.hash_password(self.senha_cadastro)
-
-
-            self.conecta_db()
-
 
             # Inseri as informações no banco de dados
             self.cursor.execute("""
@@ -217,14 +193,11 @@ class Application(DB_Usuarios):
             print('Dados inseridos com sucesso!')
             self.desconecta_db()
 
-
             messagebox.showinfo(title='Estado de Cadastro', message='Usuário Cadastrado com Sucesso')
-
 
             self.clear_entry_register()
         else:
             messagebox.showerror(title='ERRO', message='Não foi possível cadastrar o usuário.')
-
 
             print('Não foi possível cadastrar o usuário.')
 
@@ -257,11 +230,6 @@ class Application(DB_Usuarios):
             # Devolve o frame de login
             self.login_frame.pack()
    
-    def check_password(self, password, hashed_password):
-            if isinstance(hashed_password, str):
-                hashed_password = hashed_password.encode('utf-8')
-            return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
-   
     def clear_entry_register(self):
         self.name_entry_reg.delete(0, END)
         self.email_entry_reg.delete(0, END)
@@ -278,6 +246,7 @@ class Application(DB_Usuarios):
        
 
 
+
     def criar_pagina_principal(self):
         self.login_frame.pack_forget()
         self.janela.geometry('850x650')
@@ -292,6 +261,7 @@ class Application(DB_Usuarios):
 
         label_mensagem = ctk.CTkLabel(master=self.pagina_principal_frame, text='Bem Vindo ao Sistema de Gerenciamento de Alunos!', font=('Arial', 20), text_color='black')
         label_mensagem.pack(pady=(50, 0))
+
 
 
 
@@ -360,13 +330,18 @@ class Application(DB_Usuarios):
         self.reconhecimento_frame.pack()
 
         label_title = ctk.CTkLabel(master=self.reconhecimento_frame, text='Reconhecimento Facial', font=('Arial', 32), text_color='white')
-        label_title.pack(pady=(40, 0))
+        label_title.pack(pady=(30, 0))
 
-        label_info = ctk.CTkLabel(master=self.reconhecimento_frame, text='Clique no botão para tirar suas fotos para fazer o reconhecimento facial', font=('Arial', 16), text_color='white')
-        label_info.pack(pady=(40, 0))
+        self.entry_name = ctk.CTkEntry(master=self.reconhecimento_frame, placeholder_text='Digite seu primeiro Nome', width=180)
+        self.entry_name.pack(pady=(30, 0))
+
+        label_info = ctk.CTkLabel(master=self.reconhecimento_frame, text='Clique no botão para tirar suas fotos', font=('Arial', 20), text_color='white')
+        label_info.pack(pady=(30, 0))
 
         button_tirar_fotos = ctk.CTkButton(master=self.reconhecimento_frame, text='Tirar Fotos', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.tirar_fotos)
         button_tirar_fotos.pack(pady=(30, 0))
+
+
 
 
     def voltar_do_cadastro(self):
@@ -405,7 +380,7 @@ class Application(DB_Usuarios):
         button_sair_da_conta.pack(anchor='center', ipady=5, pady=(420, 10))
 
     def tirar_fotos(self):
-        from tirar_fotos import Tirar_Fotos
+        from Reconhecimento.tirar_fotos import Tirar_Fotos
 
 
 Application()
