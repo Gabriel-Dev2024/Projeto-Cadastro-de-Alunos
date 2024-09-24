@@ -3,47 +3,75 @@ import tkinter as tk
 from tkinter import messagebox
 
 class Tirar_Foto:
-    def __init__(self, janela):
-        self.janela = janela
+    def __init__(self):
+        self.janela = tk.Tk()
         self.janela.title("Face Capture")
 
         self.classific = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
         self.camera = cv2.VideoCapture(0)
+
+        if not self.camera.isOpened():
+            messagebox.showerror("Erro", "Não foi possível acessar a câmera.")
+            self.janela.destroy()
+            return
+
         self.amostra = 1
         self.numAmostra = 25
-        self.id = input("Digite seu identificador: ")
         self.largura, self.altura = 220, 220
+        self.name = 'Gabriel'
 
-        self.capture_button = tk.Button(janela, text="Capturar Foto", command=self.capture_photo)
-        self.capture_button.pack(pady=20)
+        self.capture_button = tk.Button(self.janela, text="Capturar Foto", command=self.capture_photo)
+        self.capture_button.pack(pady=5)
 
-        self.message_label = tk.Label(janela, text="")
+        self.message_label = tk.Label(self.janela, text="")
         self.message_label.pack(pady=10)
 
-        self.janela.protocol("WM_DELETE_WINDOW", self.on_closing)
+        self.video_frame = tk.Label(self.janela)
+        self.video_frame.pack()
 
-    def capture_photo(self):
-        print("Capturando a face...")
-        while self.amostra <= self.numAmostra:
-            conectado, imagem = self.camera.read()
+        self.update_frame()  # Inicia a captura de vídeo
+        self.janela.protocol("WM_DELETE_WINDOW", self.on_closing)
+        self.janela.mainloop()
+
+    def update_frame(self):
+        conectado, imagem = self.camera.read()
+        if conectado:
             imagemCinza = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)
             facesdetec = self.classific.detectMultiScale(imagemCinza, scaleFactor=1.5, minSize=(150, 150))
 
             for (x, y, l, a) in facesdetec:
                 cv2.rectangle(imagem, (x, y), (x + l, y + a), (0, 0, 255))
+
+            # Converte a imagem para formato que o Tkinter pode usar
+            imagem_rgb = cv2.cvtColor(imagem, cv2.COLOR_BGR2RGB)
+            imagem_pil = Image.fromarray(imagem_rgb)
+            imagem_tk = ImageTk.PhotoImage(imagem_pil)
+
+            # Atualiza o rótulo com a nova imagem
+            self.video_frame.imgtk = imagem_tk
+            self.video_frame.configure(image=imagem_tk)
+
+        self.video_frame.after(10, self.update_frame)  # Atualiza o frame a cada 10 ms
+
+    def capture_photo(self):
+        if self.amostra <= self.numAmostra:
+            conectado, imagem = self.camera.read()
+            if not conectado:
+                print("Erro ao capturar imagem.")
+                return
+
+            imagemCinza = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)
+            facesdetec = self.classific.detectMultiScale(imagemCinza, scaleFactor=1.5, minSize=(150, 150))
+
+            for (x, y, l, a) in facesdetec:
                 imagemface = cv2.resize(imagemCinza[y:y + a, x:x + l], (self.largura, self.altura))
-                cv2.imwrite("fotos/pessoas." + str(self.id) + "." + str(self.amostra) + ".jpg", imagemface)
-                print(f"[foto {self.amostra} capturada com sucesso")
+                cv2.imwrite(f"Fotos/pessoas.{self.name}.{self.amostra}.jpg", imagemface)
+                print(f"[foto {self.amostra} capturada com sucesso]")
                 self.amostra += 1
 
-            cv2.imshow("Face", imagem)
-            cv2.waitKey(1)
-
             if self.amostra > self.numAmostra:
-                break
-
-        messagebox.showinfo("Sucesso", "Faces capturadas com sucesso!")
-        self.cleanup()
+                messagebox.showinfo("Sucesso", "Todas as faces foram capturadas!")
+                self.cleanup()
 
     def on_closing(self):
         self.cleanup()
@@ -54,6 +82,5 @@ class Tirar_Foto:
         cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    janela = tk.Tk()
-    app = Tirar_Foto(janela)
-    janela.mainloop()
+    from PIL import Image, ImageTk  # Importar aqui para usar no método update_frame
+    Tirar_Foto()

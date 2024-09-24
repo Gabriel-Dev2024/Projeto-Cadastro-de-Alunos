@@ -5,6 +5,7 @@ import bcrypt
 from DataBase.usuarios_db import DB_Usuarios
 
 class Application(DB_Usuarios):
+    entry_name = None
     def __init__(self):
         self.janela = ctk.CTk()
         self.tema()
@@ -264,7 +265,6 @@ class Application(DB_Usuarios):
 
 
 
-
     def criar_cadastrar_alunos(self):
         self.pagina_principal_frame.pack_forget()
 
@@ -324,8 +324,8 @@ class Application(DB_Usuarios):
 
     def voltar_tela_cadastrar_alunos(self):
         self.informacoes_pessoais_frame.pack_forget()
+        self.side_bar()
         self.criar_cadastrar_alunos()
-        self.side_bar_pag.pack()
 
     def validator_informacoes_pessoais(self):
         self.nome_completo_aluno = self.nome_completo_aluno.get()
@@ -343,6 +343,7 @@ class Application(DB_Usuarios):
         return True
 
 
+
     def reconhecimento(self):
         self.informacoes_pessoais_frame.pack_forget()
         
@@ -356,12 +357,17 @@ class Application(DB_Usuarios):
         self.entry_name = ctk.CTkEntry(master=self.reconhecimento_frame, placeholder_text='Digite seu primeiro Nome', width=180)
         self.entry_name.pack(pady=(30, 0))
 
+        self.entry_ano_escolar = ctk.CTkEntry(master=self.reconhecimento_frame, placeholder_text='Digite seu ano Escolar', width=180)
+        self.entry_ano_escolar.pack(pady=(20, 0))
+
         label_info = ctk.CTkLabel(master=self.reconhecimento_frame, text='Clique no botão para tirar suas fotos', font=('Arial', 20), text_color='white')
         label_info.pack(pady=(30, 0))
 
         button_tirar_fotos = ctk.CTkButton(master=self.reconhecimento_frame, text='Tirar Fotos', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.tirar_fotos)
         button_tirar_fotos.pack(pady=(30, 0))
 
+    def tirar_fotos(self):
+        from Reconhecimento.tirar_fotos import Tirar_Foto
 
 
 
@@ -401,9 +407,5 @@ class Application(DB_Usuarios):
 
         button_sair_da_conta = ctk.CTkButton(master=self.side_bar_pag, text='Sair da Conta', hover_color='#0159A9', fg_color='transparent', font=('Arial', 20), anchor='w')
         button_sair_da_conta.pack(anchor='center', ipady=5, pady=(420, 10))
-
-    def tirar_fotos(self):
-        from Reconhecimento.tirar_fotos import Tirar_Foto
-
 
 Application()
