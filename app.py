@@ -319,8 +319,29 @@ class Application(DB_Usuarios):
         button_proxima_pagina = ctk.CTkButton(master=self.informacoes_pessoais_frame, text='Próxima Página', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.reconhecimento)
         button_proxima_pagina.place(x=280, y=550)
 
-        button_voltar = ctk.CTkButton(master=self.informacoes_pessoais_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20))
+        button_voltar = ctk.CTkButton(master=self.informacoes_pessoais_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_tela_cadastrar_alunos)
         button_voltar.place(x=130, y=550)
+
+    def voltar_tela_cadastrar_alunos(self):
+        self.informacoes_pessoais_frame.pack_forget()
+        self.criar_cadastrar_alunos()
+        self.side_bar_pag.pack()
+
+    def validator_informacoes_pessoais(self):
+        self.nome_completo_aluno = self.nome_completo_aluno.get()
+        self.data_nascimento = self.data_nascimento.get()
+        self.genero = self.genero.get()
+        self.cpf = self.cpf.get()
+        self.rg = self.rg.get()
+        self.nacionalidade = self.nacionalidade.get()
+        self.naturalidade = self.naturalidade.get()
+        self.estado_civil = self.estado_civil.get()
+
+        if not self.nome_completo_aluno or not self.data_nascimento or not self.genero or not self.cpf or not self.rg or not self.nacionalidade or not self.naturalidade or not self.estado_civil:
+            messagebox.showerror(title='ERRO', message='Todos os dados devem ser preenchidos')
+            return False
+        return True
+
 
     def reconhecimento(self):
         self.informacoes_pessoais_frame.pack_forget()
@@ -366,6 +387,8 @@ class Application(DB_Usuarios):
         self.pagina_principal_frame.pack()
 
     def side_bar(self):
+
+        # Cria o frame da side bar
         self.side_bar_pag = ctk.CTkFrame(master=self.janela, width=180, height=680, fg_color='#006CBB')
         self.side_bar_pag.pack_propagate(0)
         self.side_bar_pag.pack(fill='y', anchor='w', side='left')
@@ -380,7 +403,7 @@ class Application(DB_Usuarios):
         button_sair_da_conta.pack(anchor='center', ipady=5, pady=(420, 10))
 
     def tirar_fotos(self):
-        from Reconhecimento.tirar_fotos import Tirar_Fotos
+        from Reconhecimento.tirar_fotos import Tirar_Foto
 
 
 Application()
