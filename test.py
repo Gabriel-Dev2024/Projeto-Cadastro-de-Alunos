@@ -1,0 +1,1 @@
+from Reconhecimento.tirar_fotos import Tirar_Fotos

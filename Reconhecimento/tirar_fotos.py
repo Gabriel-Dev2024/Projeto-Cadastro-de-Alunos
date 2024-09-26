@@ -1,11 +1,14 @@
 import cv2
 import tkinter as tk
 from tkinter import messagebox
+from PIL import Image, ImageTk
+import os
 
-class Tirar_Foto:
+class Tirar_Fotos:
     def __init__(self):
         self.janela = tk.Tk()
         self.janela.title("Face Capture")
+        self.janela.resizable(False, False)
 
         self.classific = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
         self.camera = cv2.VideoCapture(0)
@@ -31,6 +34,9 @@ class Tirar_Foto:
 
         self.update_frame()  # Inicia a captura de vídeo
         self.janela.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+        self.foto = self.capture_photo()
+
         self.janela.mainloop()
 
     def update_frame(self):
@@ -44,12 +50,12 @@ class Tirar_Foto:
 
             # Converte a imagem para formato que o Tkinter pode usar
             imagem_rgb = cv2.cvtColor(imagem, cv2.COLOR_BGR2RGB)
-            imagem_pil = Image.fromarray(imagem_rgb)
-            imagem_tk = ImageTk.PhotoImage(imagem_pil)
+            self.imagem_pil = Image.fromarray(imagem_rgb)
+            self.img = ImageTk.PhotoImage(self.imagem_pil)
 
-            # Atualiza o rótulo com a nova imagem
-            self.video_frame.imgtk = imagem_tk
-            self.video_frame.configure(image=imagem_tk)
+            self.video_frame.imgtk = self.img  # Manter a referência
+            self.video_frame.configure(image=self.img)
+
 
         self.video_frame.after(10, self.update_frame)  # Atualiza o frame a cada 10 ms
 
@@ -65,13 +71,20 @@ class Tirar_Foto:
 
             for (x, y, l, a) in facesdetec:
                 imagemface = cv2.resize(imagemCinza[y:y + a, x:x + l], (self.largura, self.altura))
-                cv2.imwrite(f"Fotos/pessoas.{self.name}.{self.amostra}.jpg", imagemface)
+                
+                # Verifica se a pasta 'fotos' existe, caso contrário, cria
+                if not os.path.exists('fotos'):
+                    os.makedirs('fotos')
+                
+                cv2.imwrite(f"fotos/pessoas.{self.name}.{self.amostra}.jpg", imagemface)
                 print(f"[foto {self.amostra} capturada com sucesso]")
                 self.amostra += 1
 
             if self.amostra > self.numAmostra:
                 messagebox.showinfo("Sucesso", "Todas as faces foram capturadas!")
                 self.cleanup()
+
+            return self.imagem_pil
 
     def on_closing(self):
         self.cleanup()
@@ -81,6 +94,7 @@ class Tirar_Foto:
         self.camera.release()
         cv2.destroyAllWindows()
 
-if __name__ == "__main__":
-    from PIL import Image, ImageTk  # Importar aqui para usar no método update_frame
-    Tirar_Foto()
+    def get_foto(self):
+        return self.foto
+
+Tirar_Fotos()

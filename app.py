@@ -2,6 +2,7 @@ import customtkinter as ctk
 from customtkinter import *
 from tkinter import messagebox, END
 import bcrypt
+from PIL import ImageTk 
 from DataBase.usuarios_db import DB_Usuarios
 
 class Application(DB_Usuarios):
@@ -367,8 +368,18 @@ class Application(DB_Usuarios):
         button_tirar_fotos.pack(pady=(30, 0))
 
     def tirar_fotos(self):
-        from Reconhecimento.tirar_fotos import Tirar_Foto
+        try:
+            from Reconhecimento.tirar_fotos import Tirar_Fotos
+            self.foto_window = Tirar_Fotos()
+            imagem_capturada = self.foto_window.get_foto()  # Chame o novo método
 
+            # Atualizar a imagem no widget
+            self.img = ImageTk.PhotoImage(imagem_capturada)
+            self.reconhecimento_frame.imgtk = self.img
+            self.reconhecimento_frame.configure(image=self.img)
+
+        except Exception as e:
+            messagebox.showerror("Erro", f"Ocorreu um erro ao tentar tirar fotos: {e}")
 
 
     def voltar_do_cadastro(self):
