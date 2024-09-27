@@ -7,9 +7,6 @@ from DataBase.usuarios_db import DB_Usuarios
 
 class Application(DB_Usuarios):
     def __init__(self):
-        
-        self.entry_name = 'Gabriel'
-
         self.janela = ctk.CTk()
         self.tema()
         self.tela()
@@ -367,21 +364,21 @@ class Application(DB_Usuarios):
         self.entry_ano_escolar.pack(pady=(20, 0))
 
         label_info_1 = ctk.CTkLabel(master=self.reconhecimento_frame, text='Clique no botão para tirar suas fotos', font=('Arial', 20), text_color='white')
-        label_info_1.pack(pady=(20, 0))
+        label_info_1.pack(pady=(30, 0))
 
-        button_tirar_fotos = ctk.CTkButton(master=self.reconhecimento_frame, text='Tirar Fotos', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.tirar_fotos)
+        button_tirar_fotos = ctk.CTkButton(master=self.reconhecimento_frame, text='Tirar Fotos', text_color='white', hover_color='#0159A9', font=('Arial', 20), command=self.tirar_fotos)
         button_tirar_fotos.pack(pady=(20, 0))
 
         label_info_2 = ctk.CTkLabel(master=self.reconhecimento_frame, text='Após tirar as fotos clique no botão abaixo para treina-las', font=('Arial', 20), text_color='white')
         label_info_2.pack(pady=(20, 0))
 
-        button_treinar_fotos = ctk.CTkButton(master=self.reconhecimento_frame, text='Treinar Fotos', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20))
+        button_treinar_fotos = ctk.CTkButton(master=self.reconhecimento_frame, text='Treinar Fotos', text_color='white', hover_color='#0159A9', font=('Arial', 20))
         button_treinar_fotos.pack(pady=(20, 0))
 
         label_info_3 = ctk.CTkLabel(master=self.reconhecimento_frame, text='Após treinar as fotos faça o reconhecimento', font=('Arial', 20), text_color='white')
         label_info_3.pack(pady=(20, 0))
 
-        button_fazer_reconhecimento = ctk.CTkButton(master=self.reconhecimento_frame, text='Fazer Reconhecimento', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20))
+        button_fazer_reconhecimento = ctk.CTkButton(master=self.reconhecimento_frame, text='Fazer Reconhecimento', text_color='white', hover_color='#0159A9', font=('Arial', 20))
         button_fazer_reconhecimento.pack(pady=(20, 0))
 
         button_proxima_pagina = ctk.CTkButton(master=self.reconhecimento_frame, text='Avançar', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.contato)
@@ -472,10 +469,27 @@ class Application(DB_Usuarios):
         self.ano_serie.pack(pady=(30, 0))
 
         self.turno = ctk.CTkComboBox(master=self.informacoes_academicas_frame, values=['Matutino', 'Vespertino', 'Noturno'])
-        self.turno.pack(anchor='center', pady=(20, 0))
+        self.turno.pack(anchor='center', pady=(30, 0))
+
+        self.historico_escolar = ctk.CTkButton(master=self.informacoes_academicas_frame, text='Upload Histórico', hover_color='#0159A9', font=('Arial',20), command=self.upload_historico)
+        self.historico_escolar.pack(pady=(30, 0))
+
+        self.filename_label = ctk.CTkLabel(master=self.informacoes_academicas_frame, text='', font=('Arial', 20))
+        self.filename_label.pack(pady=(30, 0))
 
 
+    def upload_historico(self):
+        global filename
+        
+        self.filename = filedialog.askopenfilename(
+            initialdir=os.getcwd(),
+            title='Selecione o Histórico',
+            filetypes=(("Word Document", "*.docx"), ("Text Document", "*.txt"), ("PDF Document", "*.pdf"))
+        )
 
+        if self.filename:
+            nome_arquivo = os.path.basename(self.filename) # Obtém apenas o nome do arquivo
+            self.filename_label.configure(text=f'Arquivo Selecionado: {nome_arquivo}', fg_color='white')
 
 
     def voltar_do_cadastro(self):
