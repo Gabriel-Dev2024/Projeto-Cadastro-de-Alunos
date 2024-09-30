@@ -284,6 +284,12 @@ class Application(DB_Usuarios):
         button_voltar = ctk.CTkButton(master=self.pagina_cadastrar_alunos_frame, width=70, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_do_cadastro)
         button_voltar.pack(pady=(50, 0))
 
+    def voltar_do_cadastro(self):
+                self.pagina_cadastrar_alunos_frame.pack_forget()
+                self.pagina_principal_frame.pack()
+
+
+
     def informacoes_pessoais(self):
         self.pagina_cadastrar_alunos_frame.pack_forget()
         self.side_bar_pag.pack_forget()
@@ -319,8 +325,8 @@ class Application(DB_Usuarios):
         self.estado_civil = ctk.CTkComboBox(master=self.informacoes_pessoais_frame, values=['Solteiro', 'Casado', 'Divorciado', 'Viúvo'])
         self.estado_civil.pack(anchor='center', pady=(20, 0))
 
-        button_proxima_pagina = ctk.CTkButton(master=self.informacoes_pessoais_frame, text='Avançar', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.reconhecimento)
-        button_proxima_pagina.place(x=280, y=550)
+        button_avancar = ctk.CTkButton(master=self.informacoes_pessoais_frame, text='Avançar', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.reconhecimento)
+        button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.informacoes_pessoais_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_tela_cadastrar_alunos)
         button_voltar.place(x=130, y=550)
@@ -381,8 +387,8 @@ class Application(DB_Usuarios):
         button_fazer_reconhecimento = ctk.CTkButton(master=self.reconhecimento_frame, text='Fazer Reconhecimento', text_color='white', hover_color='#0159A9', font=('Arial', 20))
         button_fazer_reconhecimento.pack(pady=(20, 0))
 
-        button_proxima_pagina = ctk.CTkButton(master=self.reconhecimento_frame, text='Avançar', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.contato)
-        button_proxima_pagina.place(x=280, y=550)
+        button_avancar = ctk.CTkButton(master=self.reconhecimento_frame, text='Avançar', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.contato)
+        button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.reconhecimento_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_informacoes_pessoais)
         button_voltar.place(x=130, y=550)
@@ -404,6 +410,7 @@ class Application(DB_Usuarios):
     def voltar_informacoes_pessoais(self):
         self.reconhecimento_frame.pack_forget()
         self.informacoes_pessoais_frame.pack()
+
 
 
     def contato(self):
@@ -434,14 +441,14 @@ class Application(DB_Usuarios):
         self.cep = ctk.CTkEntry(master=self.contato_frame, placeholder_text='CEP', font=('Arial', 16), width=300)
         self.cep.pack(pady=(20, 0))
 
-        self.telefone = ctk.CTkEntry(master=self.contato_frame, placeholder_text='Telefone', font=('Arial', 16), width=300)
+        self.telefone = ctk.CTkEntry(master=self.contato_frame, placeholder_text='Telefone', font=('Arial', 16), width=350)
         self.telefone.pack(pady=(20, 0))
 
-        self.email = ctk.CTkEntry(master=self.contato_frame, placeholder_text='Email', font=('Arial', 16), width=300)
+        self.email = ctk.CTkEntry(master=self.contato_frame, placeholder_text='Email', font=('Arial', 16), width=350)
         self.email.pack(pady=(20, 0))
 
-        button_proxima_pagina = ctk.CTkButton(master=self.contato_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.informacoes_academicas)
-        button_proxima_pagina.place(x=280, y=550)
+        button_avancar = ctk.CTkButton(master=self.contato_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.informacoes_academicas)
+        button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.contato_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_reconhecimento)
         button_voltar.place(x=130, y=550)
@@ -466,10 +473,13 @@ class Application(DB_Usuarios):
         self.numero_matricula.pack(pady=(30, 0))
 
         self.ano_serie = ctk.CTkEntry(master=self.informacoes_academicas_frame, placeholder_text='Ano/Série', font=('Arial', 16), width=300)
-        self.ano_serie.pack(pady=(30, 0))
+        self.ano_serie.pack(pady=(20, 0))
 
         self.turno = ctk.CTkComboBox(master=self.informacoes_academicas_frame, values=['Matutino', 'Vespertino', 'Noturno'])
-        self.turno.pack(anchor='center', pady=(30, 0))
+        self.turno.pack(anchor='center', pady=(20, 0))
+
+        label_title = ctk.CTkLabel(master=self.informacoes_academicas_frame, text='Clique no botão para fazer o upload do historico escolar', font=('Arial', 20), text_color='white')
+        label_title.pack(pady=(30, 0))
 
         self.historico_escolar = ctk.CTkButton(master=self.informacoes_academicas_frame, text='Upload Histórico', hover_color='#0159A9', font=('Arial',20), command=self.upload_historico)
         self.historico_escolar.pack(pady=(30, 0))
@@ -477,24 +487,147 @@ class Application(DB_Usuarios):
         self.filename_label = ctk.CTkLabel(master=self.informacoes_academicas_frame, text='', font=('Arial', 20))
         self.filename_label.pack(pady=(30, 0))
 
+        button_avancar = ctk.CTkButton(master=self.informacoes_academicas_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.responsaveis)
+        button_avancar.place(x=280, y=550)
 
-    def upload_historico(self):
-        global filename
-        
-        self.filename = filedialog.askopenfilename(
-            initialdir=os.getcwd(),
-            title='Selecione o Histórico',
-            filetypes=(("Word Document", "*.docx"), ("Text Document", "*.txt"), ("PDF Document", "*.pdf"))
-        )
+        button_voltar = ctk.CTkButton(master=self.informacoes_academicas_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_contato)
+        button_voltar.place(x=130, y=550)
 
-        if self.filename:
-            nome_arquivo = os.path.basename(self.filename) # Obtém apenas o nome do arquivo
-            self.filename_label.configure(text=f'Arquivo Selecionado: {nome_arquivo}', fg_color='white')
+    def voltar_contato(self):
+        self.informacoes_academicas_frame.pack_forget()
+        self.contato_frame.pack()
 
 
-    def voltar_do_cadastro(self):
-        self.pagina_cadastrar_alunos_frame.pack_forget()
-        self.pagina_principal_frame.pack()
+
+    def responsaveis(self):
+        self.informacoes_academicas_frame.pack_forget()
+
+        self.responsaveis_frame = ctk.CTkFrame(master=self.janela, width=550, height=670, fg_color='#006CBB')
+        self.responsaveis_frame.pack_propagate(0)
+        self.responsaveis_frame.pack()
+
+        label_title = ctk.CTkLabel(master=self.responsaveis_frame, text='Responsáveis', font=('Arial', 32), text_color='white')
+        label_title.pack(pady=(30, 0))
+
+        self.nome_responsavel_1 = ctk.CTkEntry(master=self.responsaveis_frame, placeholder_text='Nome do Reponsável 1', font=('Arial', 16), width=350)
+        self.nome_responsavel_1.pack(pady=(30, 0))
+
+        self.grau_parentesco_responsavel_1 = ctk.CTkEntry(master=self.responsaveis_frame, placeholder_text='Grau de Parentesco', font=('Arial', 16), width=300)
+        self.grau_parentesco_responsavel_1.pack(pady=(20, 0))
+
+        self.telefone_responsavel_1 = ctk.CTkEntry(master=self.responsaveis_frame, placeholder_text='Telefone', font=('Arial', 16), width=300)
+        self.telefone_responsavel_1.pack(pady=(20, 0))
+
+        self.email_responsavel_1 = ctk.CTkEntry(master=self.responsaveis_frame, placeholder_text='Email do Responsável', font=('Arial', 16), width=300)
+        self.email_responsavel_1.pack(pady=(20, 0))
+
+
+        self.nome_responsavel_2 = ctk.CTkEntry(master=self.responsaveis_frame, placeholder_text='Nome do Responsável 2', font=('Arial', 16), width=350)
+        self.nome_responsavel_2.pack(pady=(40, 0))
+
+        self.grau_parentesco_responsavel_2 = ctk.CTkEntry(master=self.responsaveis_frame, placeholder_text='Grau de Parentesco', font=('Arial', 16), width=300)
+        self.grau_parentesco_responsavel_2.pack(pady=(20, 0))
+
+        self.telefone_responsavel_2 = ctk.CTkEntry(master=self.responsaveis_frame, placeholder_text='Telefone', font=('Arial', 16), width=300)
+        self.telefone_responsavel_2.pack(pady=(20, 0))
+
+        self.email_responsavel_2 = ctk.CTkEntry(master=self.responsaveis_frame, placeholder_text='Email do Responsável', font=('Arial', 16), width=300)
+        self.email_responsavel_2.pack(pady=(20, 0))
+
+        button_avancar = ctk.CTkButton(master=self.responsaveis_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.saude_seguranca)
+        button_avancar.place(x=280, y=550)
+
+        button_voltar = ctk.CTkButton(master=self.responsaveis_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_informacoes_academicas)
+        button_voltar.place(x=130, y=550)
+
+    def voltar_informacoes_academicas(self):
+        self.responsaveis_frame.pack_forget()
+        self.informacoes_academicas_frame.pack()
+
+
+
+    def saude_seguranca(self):
+        self.responsaveis_frame.pack_forget()
+
+        self.saude_seguranca_frame = ctk.CTkFrame(master=self.janela, width=550, height=670, fg_color='#006CBB')
+        self.saude_seguranca_frame.pack_propagate(0)
+        self.saude_seguranca_frame.pack()
+
+        label_title = ctk.CTkLabel(master=self.saude_seguranca_frame, text='Saúde e Segurança', font=('Arial', 32), text_color='white')
+        label_title.pack(pady=(30, 0))
+
+        self.plano_saude = ctk.CTkEntry(master=self.saude_seguranca_frame, placeholder_text='Plano de Saúde', font=('Arial', 16), width=350)
+        self.plano_saude.pack(pady=(30, 0))
+
+        self.alergias = ctk.CTkEntry(master=self.saude_seguranca_frame, placeholder_text='Alergias do Aluno', font=('Arial', 16), width=350)
+        self.alergias.pack(pady=(20, 0))
+
+        self.condicoes_medicas_especiais = ctk.CTkEntry(master=self.saude_seguranca_frame, placeholder_text='Condições Médicas Especiais', font=('Arial', 16), width=350)
+        self.condicoes_medicas_especiais.pack(pady=(20, 0))
+
+        contato_emergencia = ctk.CTkLabel(master=self.saude_seguranca_frame, text='Contato de Emergência', font=('Arial', 20), text_color='white')
+        contato_emergencia.pack(pady=(30, 0))
+
+        self.nome_emergencia = ctk.CTkEntry(master=self.saude_seguranca_frame, placeholder_text='Nome', font=('Arial', 16), width=300)
+        self.nome_emergencia.pack(pady=(20, 0))
+
+        self.telefone_emergencia = ctk.CTkEntry(master=self.saude_seguranca_frame, placeholder_text='Telefone', font=('Arial', 16), width=300)
+        self.telefone_emergencia.pack(pady=(20, 0))
+
+        self.relacao_aluno_emergencia = ctk.CTkEntry(master=self.saude_seguranca_frame, placeholder_text='Relação com o Aluno', font=('Arial', 16), width=300)
+        self.relacao_aluno_emergencia.pack(pady=(20, 0))
+
+        button_avancar = ctk.CTkButton(master=self.saude_seguranca_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.documentos)
+        button_avancar.place(x=280, y=550)
+
+        button_voltar = ctk.CTkButton(master=self.saude_seguranca_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_responsaveis)
+        button_voltar.place(x=130, y=550)
+
+    def voltar_responsaveis(self):
+        self.saude_seguranca_frame.pack_forget()
+        self.responsaveis_frame.pack()
+
+
+
+    def documentos(self):
+        self.saude_seguranca_frame.pack_forget()
+
+        self.documentos_frame = ctk.CTkFrame(master=self.janela, width=550, height=670, fg_color='#006CBB')
+        self.documentos_frame.pack_propagate(0)
+        self.documentos_frame.pack()
+
+        label_title = ctk.CTkLabel(master=self.documentos_frame, text='Documentos', font=('Arial', 32), text_color='white')
+        label_title.pack(pady=(30, 0))
+
+        label_informacoes = ctk.CTkLabel(master=self.documentos_frame, text='Faça Upload dos Arquivos', font=('Arial', 20), text_color='white')
+        label_informacoes.pack(pady=(30, 0))
+
+        self.certidao_nascimento = ctk.CTkButton(master=self.documentos_frame, text='Certidão de Nascimento', hover_color='#0159A9', font=('Arial',20))
+        self.certidao_nascimento.pack(pady=(30, 0))
+
+        self.comprovante_residencia = ctk.CTkButton(master=self.documentos_frame, text='Comprovante de Residencia', hover_color='#0159A9', font=('Arial', 20))
+        self.comprovante_residencia.pack(pady=(30, 0))
+
+        self.foto_3x4 = ctk.CTkButton(master=self.documentos_frame, text='Foto 3x4', hover_color='#0159A9', font=('Arial', 20))
+        self.foto_3x4.pack(pady=(30, 0))
+
+        self.cpf = ctk.CTkButton(master=self.documentos_frame, text='CPF do Aluno', hover_color='#0159A9', font=('Arial', 20))
+        self.cpf.pack(pady=(30, 0))
+
+        self.rg = ctk.CTkButton(master=self.documentos_frame, text='RG do Aluno', hover_color='#0159A9', font=('Arial', 20))
+        self.rg.pack(pady=(30, 0))
+
+        button_avancar = ctk.CTkButton(master=self.documentos_frame, text='Avancar', fg_color='green', hover_color='#014B05', font=('Arial', 20))
+        button_avancar.place(x=280, y=550)
+
+        button_voltar = ctk.CTkButton(master=self.documentos_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_saude_seguranca)
+        button_voltar.place(x=130, y=550)
+
+    def voltar_saude_seguranca(self):
+        self.documentos_frame.pack_forget()
+        self.saude_seguranca_frame.pack()
+
+
 
     def criar_consultar_alunos(self):
         self.pagina_principal_frame.pack_forget()
@@ -512,6 +645,21 @@ class Application(DB_Usuarios):
     def voltar_da_consulta(self):
         self.pagina_consultar_alunos_frame.pack_forget()
         self.pagina_principal_frame.pack()
+
+
+
+    def upload_historico(self):
+        global filename
+        
+        self.filename = filedialog.askopenfilename(
+            initialdir=os.getcwd(),
+            title='Selecione o Histórico',
+            filetypes=(("Word Document", "*.docx"), ("Text Document", "*.txt"), ("PDF Document", "*.pdf"))
+        )
+
+        if self.filename:
+            nome_arquivo = os.path.basename(self.filename) # Obtém apenas o nome do arquivo
+            self.filename_label.configure(text=f'Arquivo Selecionado: {nome_arquivo}', fg_color='white')
 
     def side_bar(self):
 
