@@ -2,7 +2,7 @@ import customtkinter as ctk
 from customtkinter import *
 from tkinter import messagebox, END, filedialog
 import bcrypt
-from PIL import ImageTk
+from PIL import ImageTk, Image
 from DataBase.usuarios_db import DB_Usuarios
 
 class Application(DB_Usuarios):
@@ -660,6 +660,15 @@ class Application(DB_Usuarios):
         if self.filename:
             nome_arquivo = os.path.basename(self.filename) # Obtém apenas o nome do arquivo
             self.filename_label.configure(text=f'Arquivo Selecionado: {nome_arquivo}', fg_color='white')
+
+    def upload_fotos(self, filepath):
+        global img
+        
+        img = Image.open(self.filepath)
+        img = img.resize((500, 500), Image.ANTIALIAS)
+        img = ImageTk.PhotoImage(img)
+
+        
 
     def side_bar(self):
 
