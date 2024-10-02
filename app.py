@@ -3,6 +3,9 @@ from customtkinter import *
 from tkinter import messagebox, END, filedialog
 import bcrypt
 from PIL import ImageTk, Image
+from PyQt5.QtWidgets import QMessageBox, QApplication
+import sys
+
 from DataBase.usuarios_db import DB_Usuarios
 
 class Application(DB_Usuarios):
@@ -268,7 +271,7 @@ class Application(DB_Usuarios):
         self.pagina_principal_frame.pack_propagate(0)
         self.pagina_principal_frame.pack(fill='both', expand=True)
 
-        label_pag_principal = ctk.CTkLabel(master=self.pagina_principal_frame, text='Pagina Principal', font=('Arial', 32), text_color='black')
+        label_pag_principal = ctk.CTkLabel(master=self.pagina_principal_frame, text='Página Principal', font=('Arial', 32), text_color='black')
         label_pag_principal.pack(pady=(50, 0))
 
         label_mensagem = ctk.CTkLabel(master=self.pagina_principal_frame, text='Bem Vindo ao Sistema de Gerenciamento de Alunos!', font=('Arial', 20), text_color='black')
@@ -279,12 +282,13 @@ class Application(DB_Usuarios):
     # Pagina Cadastrar Alunos
     def criar_cadastrar_alunos(self):
         self.pagina_principal_frame.pack_forget()
+        self.side_bar_pag.pack_forget()
 
         self.pagina_cadastrar_alunos_frame = ctk.CTkFrame(master=self.janela, width=630, height=650, fg_color='white', corner_radius=0)
         self.pagina_cadastrar_alunos_frame.pack_propagate(0)
         self.pagina_cadastrar_alunos_frame.pack(fill='both', expand=True)
 
-        label_title = ctk.CTkLabel(master=self.pagina_cadastrar_alunos_frame, text='Pagina de Cadastro de Alunos', font=('Arial', 32), text_color='black')
+        label_title = ctk.CTkLabel(master=self.pagina_cadastrar_alunos_frame, text='Página de Cadastro de Alunos', font=('Arial', 32), text_color='black')
         label_title.pack(pady=(50, 0))
 
         button_cadastrar = ctk.CTkButton(master=self.pagina_cadastrar_alunos_frame, text='Cadastrar Aluno', hover_color='#0159A9', font=('Arial', 20), anchor='w', command=self.informacoes_pessoais)
@@ -294,8 +298,8 @@ class Application(DB_Usuarios):
         button_voltar.pack(pady=(50, 0))
 
     def voltar_do_cadastro(self):
-                self.pagina_cadastrar_alunos_frame.pack_forget()
-                self.pagina_principal_frame.pack()
+        self.pagina_cadastrar_alunos_frame.pack_forget()
+        self.criar_pagina_principal()
 
 
 
@@ -334,10 +338,10 @@ class Application(DB_Usuarios):
         self.estado_civil = ctk.CTkComboBox(master=self.informacoes_pessoais_frame, values=['Solteiro', 'Casado', 'Divorciado', 'Viúvo'])
         self.estado_civil.pack(anchor='center', pady=(20, 0))
 
-        button_avancar = ctk.CTkButton(master=self.informacoes_pessoais_frame, text='Avançar', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.reconhecimento)
+        button_avancar = ctk.CTkButton(master=self.informacoes_pessoais_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.reconhecimento)
         button_avancar.place(x=280, y=550)
 
-        button_voltar = ctk.CTkButton(master=self.informacoes_pessoais_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_tela_cadastrar_alunos)
+        button_voltar = ctk.CTkButton(master=self.informacoes_pessoais_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_tela_cadastrar_alunos)
         button_voltar.place(x=130, y=550)
 
     def voltar_tela_cadastrar_alunos(self):
@@ -396,10 +400,10 @@ class Application(DB_Usuarios):
         button_fazer_reconhecimento = ctk.CTkButton(master=self.reconhecimento_frame, text='Fazer Reconhecimento', text_color='white', hover_color='#0159A9', font=('Arial', 20))
         button_fazer_reconhecimento.pack(pady=(20, 0))
 
-        button_avancar = ctk.CTkButton(master=self.reconhecimento_frame, text='Avançar', text_color='white', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.contato)
+        button_avancar = ctk.CTkButton(master=self.reconhecimento_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.contato)
         button_avancar.place(x=280, y=550)
 
-        button_voltar = ctk.CTkButton(master=self.reconhecimento_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_informacoes_pessoais)
+        button_voltar = ctk.CTkButton(master=self.reconhecimento_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_informacoes_pessoais)
         button_voltar.place(x=130, y=550)
 
     def tirar_fotos(self):
@@ -459,7 +463,7 @@ class Application(DB_Usuarios):
         button_avancar = ctk.CTkButton(master=self.contato_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.informacoes_academicas)
         button_avancar.place(x=280, y=550)
 
-        button_voltar = ctk.CTkButton(master=self.contato_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_reconhecimento)
+        button_voltar = ctk.CTkButton(master=self.contato_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_reconhecimento)
         button_voltar.place(x=130, y=550)
 
     def voltar_reconhecimento(self):
@@ -499,7 +503,7 @@ class Application(DB_Usuarios):
         button_avancar = ctk.CTkButton(master=self.informacoes_academicas_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.responsaveis)
         button_avancar.place(x=280, y=550)
 
-        button_voltar = ctk.CTkButton(master=self.informacoes_academicas_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_contato)
+        button_voltar = ctk.CTkButton(master=self.informacoes_academicas_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_contato)
         button_voltar.place(x=130, y=550)
 
     def voltar_contato(self):
@@ -546,7 +550,7 @@ class Application(DB_Usuarios):
         button_avancar = ctk.CTkButton(master=self.responsaveis_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.saude_seguranca)
         button_avancar.place(x=280, y=550)
 
-        button_voltar = ctk.CTkButton(master=self.responsaveis_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_informacoes_academicas)
+        button_voltar = ctk.CTkButton(master=self.responsaveis_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_informacoes_academicas)
         button_voltar.place(x=130, y=550)
 
     def voltar_informacoes_academicas(self):
@@ -589,7 +593,7 @@ class Application(DB_Usuarios):
         button_avancar = ctk.CTkButton(master=self.saude_seguranca_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.documentos)
         button_avancar.place(x=280, y=550)
 
-        button_voltar = ctk.CTkButton(master=self.saude_seguranca_frame, width=120, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_responsaveis)
+        button_voltar = ctk.CTkButton(master=self.saude_seguranca_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_responsaveis)
         button_voltar.place(x=130, y=550)
 
     def voltar_responsaveis(self):
@@ -666,25 +670,25 @@ class Application(DB_Usuarios):
         self.radio_saida = ctk.StringVar(value='')
         self.radio_imagem = ctk.StringVar(value='')
 
-        self.autorizacao_saidas_sim = ctk.CTkRadioButton(master=self.informacoes_adicionais_frame, text='Sim', value='Sim', text_color='white', variable=self.radio_saida, command=self.get_radio_saida)
+        self.autorizacao_saidas_sim = ctk.CTkRadioButton(master=self.informacoes_adicionais_frame, text='Sim', value='Sim', text_color='white', variable=self.radio_saida)
         self.autorizacao_saidas_sim.place(x=210, y=410)
 
-        self.autorizacao_saidas_nao = ctk.CTkRadioButton(master=self.informacoes_adicionais_frame, text='Não', value='Não', text_color='white', variable=self.radio_saida, command=self.get_radio_saida)
+        self.autorizacao_saidas_nao = ctk.CTkRadioButton(master=self.informacoes_adicionais_frame, text='Não', value='Não', text_color='white', variable=self.radio_saida)
         self.autorizacao_saidas_nao.place(x=290, y=410)
 
         label_info_3 = ctk.CTkLabel(master=self.informacoes_adicionais_frame, text='Autorização para uso de Imagem', font=('Arial', 20), text_color='white')
         label_info_3.pack(pady=(50, 0))
 
-        self.autorizacao_imagem_sim = ctk.CTkRadioButton(master=self.informacoes_adicionais_frame, text='Sim', value='Sim', text_color='white', variable=self.radio_imagem, command=self.get_radio_imagem)
+        self.autorizacao_imagem_sim = ctk.CTkRadioButton(master=self.informacoes_adicionais_frame, text='Sim', value='Sim', text_color='white', variable=self.radio_imagem)
         self.autorizacao_imagem_sim.place(x=210, y=490)
 
-        self.autorizacao_imagem_nao = ctk.CTkRadioButton(master=self.informacoes_adicionais_frame, text='Não', value='Não', text_color='white', variable=self.radio_imagem, command=self.get_radio_imagem)
+        self.autorizacao_imagem_nao = ctk.CTkRadioButton(master=self.informacoes_adicionais_frame, text='Não', value='Não', text_color='white', variable=self.radio_imagem)
         self.autorizacao_imagem_nao.place(x=290, y=490)
 
         button_avancar = ctk.CTkButton(master=self.informacoes_adicionais_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20))
         button_avancar.place(x=280, y=550)
 
-        button_voltar = ctk.CTkButton(master=self.informacoes_adicionais_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20))
+        button_voltar = ctk.CTkButton(master=self.informacoes_adicionais_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_documentos)
         button_voltar.place(x=130, y=550)
 
     def voltar_documentos(self):
@@ -693,15 +697,9 @@ class Application(DB_Usuarios):
 
 
 
-    def get_radio_saida(self):
-        return print(self.radio_saida.get())
-    
-    def get_radio_imagem(self):
-        return print(self.radio_imagem.get())
-
-
     def criar_consultar_alunos(self):
         self.pagina_principal_frame.pack_forget()
+        self.side_bar_pag.pack_forget()
 
         self.pagina_consultar_alunos_frame = ctk.CTkFrame(master=self.janela, width=630, height=650, fg_color='white', corner_radius=0)
         self.pagina_consultar_alunos_frame.pack_propagate(0)
@@ -715,7 +713,7 @@ class Application(DB_Usuarios):
     
     def voltar_da_consulta(self):
         self.pagina_consultar_alunos_frame.pack_forget()
-        self.pagina_principal_frame.pack()
+        self.criar_pagina_principal()
 
 
 
@@ -769,7 +767,28 @@ class Application(DB_Usuarios):
         button_pag_consultar_alunos = ctk.CTkButton(master=self.side_bar_pag, text='Consultar Alunos', hover_color='#0159A9', fg_color='transparent', font=('Arial', 20), anchor='w', command=self.criar_consultar_alunos)
         button_pag_consultar_alunos.pack(anchor='center', ipady=5, pady=(16, 10))
 
-        button_sair_da_conta = ctk.CTkButton(master=self.side_bar_pag, text='Sair da Conta', hover_color='#0159A9', fg_color='transparent', font=('Arial', 20), anchor='w')
+        button_sair_da_conta = ctk.CTkButton(master=self.side_bar_pag, text='Sair da Conta', hover_color='#0159A9', fg_color='transparent', font=('Arial', 20), anchor='w', command=self.sair_conta)
         button_sair_da_conta.pack(anchor='center', ipady=5, pady=(420, 10))
 
+    def sair_conta(self):
+        self.msg = QMessageBox()
+        self.msg.setWindowTitle("Sair da Conta")
+        self.msg.setText("Deseja sair da sua conta?")
+        res = self.msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+
+        self.msg.buttonClicked.connect(self.popup_button)
+
+        self.msg.exec_()
+    
+    def popup_button(self, i):
+        if i == self.msg.button(QMessageBox.Yes):
+            self.pagina_principal_frame.pack_forget()
+            self.side_bar_pag.pack_forget()
+
+            self.tela()
+            self.tela_login()
+        else:
+            return
+
+app = QApplication(sys.argv)
 Application()
