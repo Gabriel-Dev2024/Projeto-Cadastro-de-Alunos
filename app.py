@@ -12,6 +12,15 @@ class Application(DB_Usuarios):
         self.tela()
         self.tela_login()
         self.cria_tabela()
+
+        self.selected_images = {
+            "certidao_nascimento": None,
+            "comprovante_residencia": None,
+            "foto_3x4": None,
+            "cpf": None,
+            "rg": None,
+        }
+
         self.janela.mainloop()
 
     def tema(self):
@@ -602,7 +611,7 @@ class Application(DB_Usuarios):
         label_informacoes = ctk.CTkLabel(master=self.documentos_frame, text='Faça Upload dos Arquivos', font=('Arial', 20), text_color='white')
         label_informacoes.pack(pady=(30, 0))
 
-        self.certidao_nascimento = ctk.CTkButton(master=self.documentos_frame, text='Certidão de Nascimento', hover_color='#0159A9', font=('Arial',20))
+        self.certidao_nascimento = ctk.CTkButton(master=self.documentos_frame, text='Certidão de Nascimento', hover_color='#0159A9', font=('Arial',20), command=self.select_img)
         self.certidao_nascimento.pack(pady=(30, 0))
 
         self.comprovante_residencia = ctk.CTkButton(master=self.documentos_frame, text='Comprovante de Residencia', hover_color='#0159A9', font=('Arial', 20))
@@ -617,7 +626,7 @@ class Application(DB_Usuarios):
         self.rg = ctk.CTkButton(master=self.documentos_frame, text='RG do Aluno', hover_color='#0159A9', font=('Arial', 20))
         self.rg.pack(pady=(30, 0))
 
-        button_avancar = ctk.CTkButton(master=self.documentos_frame, text='Avancar', fg_color='green', hover_color='#014B05', font=('Arial', 20))
+        button_avancar = ctk.CTkButton(master=self.documentos_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.informacoes_adicionais)
         button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.documentos_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_saude_seguranca)
@@ -627,6 +636,68 @@ class Application(DB_Usuarios):
         self.documentos_frame.pack_forget()
         self.saude_seguranca_frame.pack()
 
+
+
+    def informacoes_adicionais(self):
+        self.documentos_frame.pack_forget()
+
+        self.informacoes_adicionais_frame = ctk.CTkFrame(master=self.janela, width=550, height=670, fg_color='#006CBB')
+        self.informacoes_adicionais_frame.pack_propagate(0)
+        self.informacoes_adicionais_frame.pack()
+
+        label_title = ctk.CTkLabel(master=self.informacoes_adicionais_frame, text='Observações Adicionais', font=('Arial', 32), text_color='white')
+        label_title.pack(pady=(30, 0))
+
+        label_info = ctk.CTkLabel(master=self.informacoes_adicionais_frame, text='Informações Gerais', font=('Arial', 22), text_color='white')
+        label_info.pack(pady=(30, 0))
+
+        self.observacoes_gerais = ctk.CTkTextbox(master=self.informacoes_adicionais_frame, font=('Arial', 16), width=350, height=100)
+        self.observacoes_gerais.pack(pady=(20, 0))
+
+        self.necessidades_especiais = ctk.CTkEntry(master=self.informacoes_adicionais_frame, placeholder_text='Necessidades Especiais(Se houver)', font=('Arial', 16), width=350)
+        self.necessidades_especiais.pack(pady=(20, 0))
+
+        self.hobbies_interesses = ctk.CTkEntry(master=self.informacoes_adicionais_frame, placeholder_text='Hobbies e Interesses', font=('Arial', 16), width=350)
+        self.hobbies_interesses.pack(pady=(20, 0))
+
+        label_info_2 = ctk.CTkLabel(master=self.informacoes_adicionais_frame, text='Autorização para Saídas', font=('Arial', 20), text_color='white')
+        label_info_2.pack(pady=(30, 0))
+
+        self.radio_saida = ctk.StringVar(value='')
+        self.radio_imagem = ctk.StringVar(value='')
+
+        self.autorizacao_saidas_sim = ctk.CTkRadioButton(master=self.informacoes_adicionais_frame, text='Sim', value='Sim', text_color='white', variable=self.radio_saida, command=self.get_radio_saida)
+        self.autorizacao_saidas_sim.place(x=210, y=410)
+
+        self.autorizacao_saidas_nao = ctk.CTkRadioButton(master=self.informacoes_adicionais_frame, text='Não', value='Não', text_color='white', variable=self.radio_saida, command=self.get_radio_saida)
+        self.autorizacao_saidas_nao.place(x=290, y=410)
+
+        label_info_3 = ctk.CTkLabel(master=self.informacoes_adicionais_frame, text='Autorização para uso de Imagem', font=('Arial', 20), text_color='white')
+        label_info_3.pack(pady=(50, 0))
+
+        self.autorizacao_imagem_sim = ctk.CTkRadioButton(master=self.informacoes_adicionais_frame, text='Sim', value='Sim', text_color='white', variable=self.radio_imagem, command=self.get_radio_imagem)
+        self.autorizacao_imagem_sim.place(x=210, y=490)
+
+        self.autorizacao_imagem_nao = ctk.CTkRadioButton(master=self.informacoes_adicionais_frame, text='Não', value='Não', text_color='white', variable=self.radio_imagem, command=self.get_radio_imagem)
+        self.autorizacao_imagem_nao.place(x=290, y=490)
+
+        button_avancar = ctk.CTkButton(master=self.informacoes_adicionais_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20))
+        button_avancar.place(x=280, y=550)
+
+        button_voltar = ctk.CTkButton(master=self.informacoes_adicionais_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20))
+        button_voltar.place(x=130, y=550)
+
+    def voltar_documentos(self):
+        self.informacoes_adicionais_frame.pack_forget()
+        self.documentos_frame.pack()
+
+
+
+    def get_radio_saida(self):
+        return print(self.radio_saida.get())
+    
+    def get_radio_imagem(self):
+        return print(self.radio_imagem.get())
 
 
     def criar_consultar_alunos(self):
@@ -651,24 +722,39 @@ class Application(DB_Usuarios):
     def upload_historico(self):
         global filename
         
-        self.filename = filedialog.askopenfilename(
+        filename = filedialog.askopenfilename(
             initialdir=os.getcwd(),
             title='Selecione o Histórico',
             filetypes=(("Word Document", "*.docx"), ("Text Document", "*.txt"), ("PDF Document", "*.pdf"))
         )
 
-        if self.filename:
-            nome_arquivo = os.path.basename(self.filename) # Obtém apenas o nome do arquivo
+        if filename:
+            nome_arquivo = os.path.basename(filename) # Obtém apenas o nome do arquivo
             self.filename_label.configure(text=f'Arquivo Selecionado: {nome_arquivo}', fg_color='white')
 
-    def upload_fotos(self, filepath):
+    def upload_fotos(self, filepath, doc_type):
         global img
         
-        img = Image.open(self.filepath)
-        img = img.resize((500, 500), Image.ANTIALIAS)
+        img = Image.open(filepath)
+        img = img.resize((400, 400))
         img = ImageTk.PhotoImage(img)
 
+
+
+        # Armazenar a imagem em formato binário
+        with open(filepath, "rb") as file:
+            self.selected_images[doc_type] = file.read()
         
+    def select_img(self, doc_type):
+        global filename
+
+        filename = filedialog.askopenfilename(
+            initialdir=os.getcwd(),
+            title='Selecione as Fotos',
+            filetypes=(("JPG Imagem", "*.jpg"), ("JPEG Imagem", "*.jpeg"), ("PNG Imagem", "*.png"))
+        )
+        if filename:
+            self.upload_fotos(filename, doc_type)
 
     def side_bar(self):
 
