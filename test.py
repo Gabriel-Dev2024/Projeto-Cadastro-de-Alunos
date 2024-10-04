@@ -59,7 +59,7 @@ class MyApp:
         img = CTkImage(img)
 
         self.image_label.configure(image=img)
-        self.image_label.image = img  # Mantenha uma referência da imagem
+        self.image_label.Image = img  # Mantenha uma referência da imagem
 
         # Armazenar a imagem em formato binário
         with open(filepath, "rb") as file:

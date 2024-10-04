@@ -5,7 +5,6 @@ import bcrypt
 from PIL import ImageTk, Image
 from PyQt5.QtWidgets import QMessageBox, QApplication
 import sys
-
 from DataBase.usuarios_db import DB_Usuarios
 
 class Application(DB_Usuarios):
@@ -22,6 +21,13 @@ class Application(DB_Usuarios):
             "foto_3x4": None,
             "cpf": None,
             "rg": None,
+        }
+        self.documentos_status = {
+            "certidao_nascimento": False,
+            "comprovante_residencia": False,
+            "foto_3x4": False,
+            "cpf": False,
+            "rg": False,
         }
 
         self.janela.mainloop()
@@ -303,6 +309,7 @@ class Application(DB_Usuarios):
 
 
 
+
     def informacoes_pessoais(self):
         self.pagina_cadastrar_alunos_frame.pack_forget()
         self.side_bar_pag.pack_forget()
@@ -338,11 +345,15 @@ class Application(DB_Usuarios):
         self.estado_civil = ctk.CTkComboBox(master=self.informacoes_pessoais_frame, values=['Solteiro', 'Casado', 'Divorciado', 'Viúvo'])
         self.estado_civil.pack(anchor='center', pady=(20, 0))
 
-        button_avancar = ctk.CTkButton(master=self.informacoes_pessoais_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.reconhecimento)
+        button_avancar = ctk.CTkButton(master=self.informacoes_pessoais_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.avancar_reconhecimento)
         button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.informacoes_pessoais_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_tela_cadastrar_alunos)
         button_voltar.place(x=130, y=550)
+
+    def avancar_reconhecimento(self):
+        if self.validator_informacoes_pessoais():
+            self.reconhecimento()
 
     def voltar_tela_cadastrar_alunos(self):
         self.informacoes_pessoais_frame.pack_forget()
@@ -350,19 +361,20 @@ class Application(DB_Usuarios):
         self.criar_cadastrar_alunos()
 
     def validator_informacoes_pessoais(self):
-        self.nome_completo_aluno = self.nome_completo_aluno.get()
-        self.data_nascimento = self.data_nascimento.get()
-        self.genero = self.genero.get()
-        self.cpf = self.cpf.get()
-        self.rg = self.rg.get()
-        self.nacionalidade = self.nacionalidade.get()
-        self.naturalidade = self.naturalidade.get()
-        self.estado_civil = self.estado_civil.get()
+        nome_completo_aluno = self.nome_completo_aluno.get().strip()
+        data_nascimento = self.data_nascimento.get().strip()
+        genero = self.genero.get()
+        cpf = self.cpf.get().strip()
+        rg = self.rg.get().strip()
+        nacionalidade = self.nacionalidade.get().strip()
+        naturalidade = self.naturalidade.get().strip()
+        estado_civil = self.estado_civil.get()
 
-        if not self.nome_completo_aluno or not self.data_nascimento or not self.genero or not self.cpf or not self.rg or not self.nacionalidade or not self.naturalidade or not self.estado_civil:
-            messagebox.showerror(title='ERRO', message='Todos os dados devem ser preenchidos')
+        if not nome_completo_aluno or not data_nascimento or not genero or not cpf or not rg or not nacionalidade or not naturalidade or not estado_civil:
+            messagebox.showerror(title='ERRO', message='Todos as informações pessoais devem ser preenchidos')
             return False
         return True
+
 
 
 
@@ -388,19 +400,13 @@ class Application(DB_Usuarios):
         button_tirar_fotos = ctk.CTkButton(master=self.reconhecimento_frame, text='Tirar Fotos', text_color='white', hover_color='#0159A9', font=('Arial', 20), command=self.tirar_fotos)
         button_tirar_fotos.pack(pady=(20, 0))
 
-        label_info_2 = ctk.CTkLabel(master=self.reconhecimento_frame, text='Após tirar as fotos clique no botão abaixo para treina-las', font=('Arial', 20), text_color='white')
-        label_info_2.pack(pady=(20, 0))
-
-        button_treinar_fotos = ctk.CTkButton(master=self.reconhecimento_frame, text='Treinar Fotos', text_color='white', hover_color='#0159A9', font=('Arial', 20))
-        button_treinar_fotos.pack(pady=(20, 0))
-
         label_info_3 = ctk.CTkLabel(master=self.reconhecimento_frame, text='Após treinar as fotos faça o reconhecimento', font=('Arial', 20), text_color='white')
         label_info_3.pack(pady=(20, 0))
 
         button_fazer_reconhecimento = ctk.CTkButton(master=self.reconhecimento_frame, text='Fazer Reconhecimento', text_color='white', hover_color='#0159A9', font=('Arial', 20))
         button_fazer_reconhecimento.pack(pady=(20, 0))
 
-        button_avancar = ctk.CTkButton(master=self.reconhecimento_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.contato)
+        button_avancar = ctk.CTkButton(master=self.reconhecimento_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.avancar_contato)
         button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.reconhecimento_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_informacoes_pessoais)
@@ -423,6 +429,20 @@ class Application(DB_Usuarios):
     def voltar_informacoes_pessoais(self):
         self.reconhecimento_frame.pack_forget()
         self.informacoes_pessoais_frame.pack()
+
+    def avancar_contato(self):
+        if self.validator_reconhecimento():
+            self.contato()
+
+    def validator_reconhecimento(self):
+        entry_name = self.entry_name.get()
+        entry_ano_escolar = self.entry_ano_escolar.get()
+
+        if not entry_name or not entry_ano_escolar:
+            messagebox.showerror(title='ERRO', message='Todos os dados devem ser preenchidos')
+            return False
+        return True
+
 
 
 
@@ -460,7 +480,7 @@ class Application(DB_Usuarios):
         self.email = ctk.CTkEntry(master=self.contato_frame, placeholder_text='Email', font=('Arial', 16), width=350)
         self.email.pack(pady=(20, 0))
 
-        button_avancar = ctk.CTkButton(master=self.contato_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.informacoes_academicas)
+        button_avancar = ctk.CTkButton(master=self.contato_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.avancar_informacoes_academicas)
         button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.contato_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_reconhecimento)
@@ -469,6 +489,26 @@ class Application(DB_Usuarios):
     def voltar_reconhecimento(self):
         self.contato_frame.pack_forget()
         self.reconhecimento_frame.pack()
+
+    def avancar_informacoes_academicas(self):
+        if self.validator_contato():
+            self.informacoes_academicas()
+
+    def validator_contato(self):
+        rua_avenida = self.rua_avenida.get().strip()
+        numero = self.numero.get().strip()
+        bairro = self.bairro.get().strip()
+        cidade = self.cidade.get().strip()
+        estado = self.estado.get().strip()
+        cep = self.cep.get().strip()
+        telefone = self.telefone.get().strip()
+        email = self.email.get().strip()
+
+        if not rua_avenida or not numero or not bairro or not cidade or not estado or not cep or not telefone or not email:
+            messagebox.showerror(title='ERRO', message='Todos os dados de contato devem ser preenchidos')
+            return False
+        return True
+
 
 
 
@@ -497,10 +537,10 @@ class Application(DB_Usuarios):
         self.historico_escolar = ctk.CTkButton(master=self.informacoes_academicas_frame, text='Upload Histórico', hover_color='#0159A9', font=('Arial',20), command=self.upload_historico)
         self.historico_escolar.pack(pady=(30, 0))
 
-        self.filename_label = ctk.CTkLabel(master=self.informacoes_academicas_frame, text='', font=('Arial', 20))
+        self.filename_label = ctk.CTkLabel(master=self.informacoes_academicas_frame, text='', font=('Arial', 20), text_color='white')
         self.filename_label.pack(pady=(30, 0))
 
-        button_avancar = ctk.CTkButton(master=self.informacoes_academicas_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.responsaveis)
+        button_avancar = ctk.CTkButton(master=self.informacoes_academicas_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.avancar_responsaveis)
         button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.informacoes_academicas_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_contato)
@@ -509,6 +549,37 @@ class Application(DB_Usuarios):
     def voltar_contato(self):
         self.informacoes_academicas_frame.pack_forget()
         self.contato_frame.pack()
+
+    def avancar_responsaveis(self):
+        if self.validator_informacoes_academicas():
+            self.responsaveis()
+
+    def validator_informacoes_academicas(self):
+        numero_matricula = self.numero_matricula.get().strip()
+        ano_serie = self.ano_serie.get().strip()
+        turno = self.turno.get()
+
+        if not numero_matricula or not ano_serie or not turno:
+            messagebox.showerror(title='ERRO', message='Todas as informações acadêmicas devem ser preenchidos')
+            return False
+        if not hasattr(self, 'nome_historico') or not self.nome_historico:
+            messagebox.showerror(title='ERRO', message='Favor fazer o upload do historico escolar')
+            return False
+        return True
+    
+    def upload_historico(self):
+        global filename
+        
+        filename = filedialog.askopenfilename(
+            initialdir=os.getcwd(),
+            title='Selecione o Histórico',
+            filetypes=(("Word Document", "*.docx"), ("Text Document", "*.txt"), ("PDF Document", "*.pdf"))
+        )
+
+        if filename:
+            self.nome_historico = os.path.basename(filename) # Obtém apenas o nome do arquivo
+            self.filename_label.configure(text=f'Arquivo Selecionado: {self.nome_historico}')
+
 
 
 
@@ -547,7 +618,7 @@ class Application(DB_Usuarios):
         self.email_responsavel_2 = ctk.CTkEntry(master=self.responsaveis_frame, placeholder_text='Email do Responsável', font=('Arial', 16), width=300)
         self.email_responsavel_2.pack(pady=(20, 0))
 
-        button_avancar = ctk.CTkButton(master=self.responsaveis_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.saude_seguranca)
+        button_avancar = ctk.CTkButton(master=self.responsaveis_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.avancar_saude_seguranca)
         button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.responsaveis_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_informacoes_academicas)
@@ -556,6 +627,27 @@ class Application(DB_Usuarios):
     def voltar_informacoes_academicas(self):
         self.responsaveis_frame.pack_forget()
         self.informacoes_academicas_frame.pack()
+
+    def avancar_saude_seguranca(self):
+        if self.validator_responsaveis():
+            self.saude_seguranca()
+
+    def validator_responsaveis(self):
+        nome_responsavel_1 = self.nome_responsavel_1.get().strip()
+        grau_parentesco_responsavel_1 = self.grau_parentesco_responsavel_1.get().strip()
+        telefone_responsavel_1 = self.telefone_responsavel_1.get().strip()
+        email_responsavel_1 = self.email_responsavel_1.get().strip()
+
+        nome_responsavel_2 = self.nome_responsavel_2.get().strip()
+        grau_parentesco_responsavel_2 = self.grau_parentesco_responsavel_2.get().strip()
+        telefone_responsavel_2 = self.telefone_responsavel_2.get().strip()
+        email_responsavel_2 = self.email_responsavel_2.get().strip()
+
+        if not nome_responsavel_1 or not grau_parentesco_responsavel_1 or not telefone_responsavel_1 or not email_responsavel_1 or not nome_responsavel_2 or not grau_parentesco_responsavel_2 or not telefone_responsavel_2 or not email_responsavel_2:
+            messagebox.showerror(title='ERRO', message='Todos os dados dos responsáveis devem ser preenchidos')
+            return False
+        return True
+
 
 
 
@@ -600,6 +692,24 @@ class Application(DB_Usuarios):
         self.saude_seguranca_frame.pack_forget()
         self.responsaveis_frame.pack()
 
+    def avancar_documentos(self):
+        if self.validator_saude_seguranca():
+            self.documentos()
+
+    def validator_saude_seguranca(self):
+        plano_saude = self.plano_saude.get().strip()
+        alergias = self.alergias.get().strip()
+        condicoes_medicas_especiais = self.condicoes_medicas_especiais.get().strip()
+        nome_emergencia = self.nome_emergencia.get().strip()
+        telefone_emergencia = self.telefone_emergencia.get().strip()
+        relacao_aluno_emergencia = self.relacao_aluno_emergencia.get().strip()
+
+        if not plano_saude or not alergias or not condicoes_medicas_especiais or not nome_emergencia or not telefone_emergencia or not relacao_aluno_emergencia:
+            messagebox.showerror(title='ERRO', message='Todos os dados da saúde e segurança devem ser preenchidos')
+            return False
+        return True
+
+
 
 
     def documentos(self):
@@ -615,22 +725,22 @@ class Application(DB_Usuarios):
         label_informacoes = ctk.CTkLabel(master=self.documentos_frame, text='Faça Upload dos Arquivos', font=('Arial', 20), text_color='white')
         label_informacoes.pack(pady=(30, 0))
 
-        self.certidao_nascimento = ctk.CTkButton(master=self.documentos_frame, text='Certidão de Nascimento', hover_color='#0159A9', font=('Arial',20), command=self.select_img)
+        self.certidao_nascimento = ctk.CTkButton(master=self.documentos_frame, text='Certidão de Nascimento', hover_color='#0159A9', font=('Arial',20), command=lambda: self.select_img('certidão_nascimento'))
         self.certidao_nascimento.pack(pady=(30, 0))
 
-        self.comprovante_residencia = ctk.CTkButton(master=self.documentos_frame, text='Comprovante de Residencia', hover_color='#0159A9', font=('Arial', 20))
+        self.comprovante_residencia = ctk.CTkButton(master=self.documentos_frame, text='Comprovante de Residencia', hover_color='#0159A9', font=('Arial', 20), command=lambda: self.select_img('comprovante_residencia'))
         self.comprovante_residencia.pack(pady=(30, 0))
 
-        self.foto_3x4 = ctk.CTkButton(master=self.documentos_frame, text='Foto 3x4', hover_color='#0159A9', font=('Arial', 20))
+        self.foto_3x4 = ctk.CTkButton(master=self.documentos_frame, text='Foto 3x4', hover_color='#0159A9', font=('Arial', 20), command=lambda: self.select_img('foto_3x4'))
         self.foto_3x4.pack(pady=(30, 0))
 
-        self.cpf = ctk.CTkButton(master=self.documentos_frame, text='CPF do Aluno', hover_color='#0159A9', font=('Arial', 20))
+        self.cpf = ctk.CTkButton(master=self.documentos_frame, text='CPF do Aluno', hover_color='#0159A9', font=('Arial', 20), command=lambda: self.select_img('cpf'))
         self.cpf.pack(pady=(30, 0))
 
-        self.rg = ctk.CTkButton(master=self.documentos_frame, text='RG do Aluno', hover_color='#0159A9', font=('Arial', 20))
+        self.rg = ctk.CTkButton(master=self.documentos_frame, text='RG do Aluno', hover_color='#0159A9', font=('Arial', 20), command=lambda: self.select_img('rg'))
         self.rg.pack(pady=(30, 0))
 
-        button_avancar = ctk.CTkButton(master=self.documentos_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.informacoes_adicionais)
+        button_avancar = ctk.CTkButton(master=self.documentos_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.informacoes_adicionais) # Colocar a funcao avancar_informacoes_adicionais
         button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.documentos_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_saude_seguranca)
@@ -639,6 +749,32 @@ class Application(DB_Usuarios):
     def voltar_saude_seguranca(self):
         self.documentos_frame.pack_forget()
         self.saude_seguranca_frame.pack()
+
+    def avancar_informacoes_adicionais(self):
+        if self.validator_documentos():
+            self.informacoes_adicionais()
+
+    def select_img(self, doc_type):
+        global filename
+
+        filename = filedialog.askopenfilename(
+            initialdir=os.getcwd(),
+            title='Selecione as Fotos',
+            filetypes=(("JPG Imagem", "*.jpg"), ("JPEG Imagem", "*.jpeg"), ("PNG Imagem", "*.png"))
+        )
+        if filename:
+            self.nome_imagem = os.path.basename(filename)
+            self.upload_fotos(filename, doc_type)
+            self.documentos_status[doc_type] = True
+
+    def validator_documentos(self):
+        # Verifica se todos os documentos foram enviados
+        for doc, status in self.documentos_status.items():
+            if not status:
+                messagebox.showerror(title='ERRO', message=f'Você deve fazer o upload da {doc.replace("_", " ").title()}.')
+                return False
+        return True
+
 
 
 
@@ -697,6 +833,7 @@ class Application(DB_Usuarios):
 
 
 
+
     def criar_consultar_alunos(self):
         self.pagina_principal_frame.pack_forget()
         self.side_bar_pag.pack_forget()
@@ -717,19 +854,7 @@ class Application(DB_Usuarios):
 
 
 
-    def upload_historico(self):
-        global filename
-        
-        filename = filedialog.askopenfilename(
-            initialdir=os.getcwd(),
-            title='Selecione o Histórico',
-            filetypes=(("Word Document", "*.docx"), ("Text Document", "*.txt"), ("PDF Document", "*.pdf"))
-        )
-
-        if filename:
-            nome_arquivo = os.path.basename(filename) # Obtém apenas o nome do arquivo
-            self.filename_label.configure(text=f'Arquivo Selecionado: {nome_arquivo}', fg_color='white')
-
+    
     def upload_fotos(self, filepath, doc_type):
         global img
         
@@ -742,17 +867,6 @@ class Application(DB_Usuarios):
         # Armazenar a imagem em formato binário
         with open(filepath, "rb") as file:
             self.selected_images[doc_type] = file.read()
-        
-    def select_img(self, doc_type):
-        global filename
-
-        filename = filedialog.askopenfilename(
-            initialdir=os.getcwd(),
-            title='Selecione as Fotos',
-            filetypes=(("JPG Imagem", "*.jpg"), ("JPEG Imagem", "*.jpeg"), ("PNG Imagem", "*.png"))
-        )
-        if filename:
-            self.upload_fotos(filename, doc_type)
 
     def side_bar(self):
 
