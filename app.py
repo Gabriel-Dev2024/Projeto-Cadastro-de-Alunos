@@ -406,7 +406,7 @@ class Application(DB_Usuarios):
         button_fazer_reconhecimento = ctk.CTkButton(master=self.reconhecimento_frame, text='Fazer Reconhecimento', text_color='white', hover_color='#0159A9', font=('Arial', 20))
         button_fazer_reconhecimento.pack(pady=(20, 0))
 
-        button_avancar = ctk.CTkButton(master=self.reconhecimento_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.avancar_contato)
+        button_avancar = ctk.CTkButton(master=self.reconhecimento_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.contato) # Colocar avancar_contato
         button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.reconhecimento_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_informacoes_pessoais)
@@ -480,7 +480,7 @@ class Application(DB_Usuarios):
         self.email = ctk.CTkEntry(master=self.contato_frame, placeholder_text='Email', font=('Arial', 16), width=350)
         self.email.pack(pady=(20, 0))
 
-        button_avancar = ctk.CTkButton(master=self.contato_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.avancar_informacoes_academicas)
+        button_avancar = ctk.CTkButton(master=self.contato_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.informacoes_academicas) # Colocar avancar_informacoes_academicas
         button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.contato_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_reconhecimento)
@@ -540,7 +540,7 @@ class Application(DB_Usuarios):
         self.filename_label = ctk.CTkLabel(master=self.informacoes_academicas_frame, text='', font=('Arial', 20), text_color='white')
         self.filename_label.pack(pady=(30, 0))
 
-        button_avancar = ctk.CTkButton(master=self.informacoes_academicas_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.avancar_responsaveis)
+        button_avancar = ctk.CTkButton(master=self.informacoes_academicas_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.responsaveis) # Colocar avancar_responsaveis
         button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.informacoes_academicas_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_contato)
@@ -618,7 +618,7 @@ class Application(DB_Usuarios):
         self.email_responsavel_2 = ctk.CTkEntry(master=self.responsaveis_frame, placeholder_text='Email do Responsável', font=('Arial', 16), width=300)
         self.email_responsavel_2.pack(pady=(20, 0))
 
-        button_avancar = ctk.CTkButton(master=self.responsaveis_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.avancar_saude_seguranca)
+        button_avancar = ctk.CTkButton(master=self.responsaveis_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.saude_seguranca) # Colocar avancar_saude_seguranca
         button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.responsaveis_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_informacoes_academicas)
@@ -682,7 +682,7 @@ class Application(DB_Usuarios):
         self.relacao_aluno_emergencia = ctk.CTkEntry(master=self.saude_seguranca_frame, placeholder_text='Relação com o Aluno', font=('Arial', 16), width=300)
         self.relacao_aluno_emergencia.pack(pady=(20, 0))
 
-        button_avancar = ctk.CTkButton(master=self.saude_seguranca_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.documentos)
+        button_avancar = ctk.CTkButton(master=self.saude_seguranca_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.documentos) # Colocar avancar_documentos
         button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.saude_seguranca_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_responsaveis)
@@ -725,20 +725,20 @@ class Application(DB_Usuarios):
         label_informacoes = ctk.CTkLabel(master=self.documentos_frame, text='Faça Upload dos Arquivos', font=('Arial', 20), text_color='white')
         label_informacoes.pack(pady=(30, 0))
 
-        self.certidao_nascimento = ctk.CTkButton(master=self.documentos_frame, text='Certidão de Nascimento', hover_color='#0159A9', font=('Arial',20), command=lambda: self.select_img('certidão_nascimento'))
-        self.certidao_nascimento.pack(pady=(30, 0))
+        self.certidao_nascimento_image = ctk.CTkButton(master=self.documentos_frame, text='Certidão de Nascimento', hover_color='#0159A9', font=('Arial',20), command=lambda: self.select_img('certidão_nascimento'))
+        self.certidao_nascimento_image.pack(pady=(30, 0))
 
-        self.comprovante_residencia = ctk.CTkButton(master=self.documentos_frame, text='Comprovante de Residencia', hover_color='#0159A9', font=('Arial', 20), command=lambda: self.select_img('comprovante_residencia'))
-        self.comprovante_residencia.pack(pady=(30, 0))
+        self.comprovante_residencia_image = ctk.CTkButton(master=self.documentos_frame, text='Comprovante de Residencia', hover_color='#0159A9', font=('Arial', 20), command=lambda: self.select_img('comprovante_residencia'))
+        self.comprovante_residencia_image.pack(pady=(30, 0))
 
-        self.foto_3x4 = ctk.CTkButton(master=self.documentos_frame, text='Foto 3x4', hover_color='#0159A9', font=('Arial', 20), command=lambda: self.select_img('foto_3x4'))
-        self.foto_3x4.pack(pady=(30, 0))
+        self.foto_3x4_image = ctk.CTkButton(master=self.documentos_frame, text='Foto 3x4', hover_color='#0159A9', font=('Arial', 20), command=lambda: self.select_img('foto_3x4'))
+        self.foto_3x4_image.pack(pady=(30, 0))
 
-        self.cpf = ctk.CTkButton(master=self.documentos_frame, text='CPF do Aluno', hover_color='#0159A9', font=('Arial', 20), command=lambda: self.select_img('cpf'))
-        self.cpf.pack(pady=(30, 0))
+        self.cpf_image = ctk.CTkButton(master=self.documentos_frame, text='CPF do Aluno', hover_color='#0159A9', font=('Arial', 20), command=lambda: self.select_img('cpf'))
+        self.cpf_image.pack(pady=(30, 0))
 
-        self.rg = ctk.CTkButton(master=self.documentos_frame, text='RG do Aluno', hover_color='#0159A9', font=('Arial', 20), command=lambda: self.select_img('rg'))
-        self.rg.pack(pady=(30, 0))
+        self.rg_image = ctk.CTkButton(master=self.documentos_frame, text='RG do Aluno', hover_color='#0159A9', font=('Arial', 20), command=lambda: self.select_img('rg'))
+        self.rg_image.pack(pady=(30, 0))
 
         button_avancar = ctk.CTkButton(master=self.documentos_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.informacoes_adicionais) # Colocar a funcao avancar_informacoes_adicionais
         button_avancar.place(x=280, y=550)
@@ -821,7 +821,7 @@ class Application(DB_Usuarios):
         self.autorizacao_imagem_nao = ctk.CTkRadioButton(master=self.informacoes_adicionais_frame, text='Não', value='Não', text_color='white', variable=self.radio_imagem)
         self.autorizacao_imagem_nao.place(x=290, y=490)
 
-        button_avancar = ctk.CTkButton(master=self.informacoes_adicionais_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20))
+        button_avancar = ctk.CTkButton(master=self.informacoes_adicionais_frame, text='Avançar', fg_color='green', hover_color='#014B05', font=('Arial', 20), command=self.pagina_confirmar_dados_1)
         button_avancar.place(x=280, y=550)
 
         button_voltar = ctk.CTkButton(master=self.informacoes_adicionais_frame, text='Voltar', fg_color='gray', hover_color='#202020', font=('Arial', 20), command=self.voltar_documentos)
@@ -830,6 +830,78 @@ class Application(DB_Usuarios):
     def voltar_documentos(self):
         self.informacoes_adicionais_frame.pack_forget()
         self.documentos_frame.pack()
+
+
+
+
+    def pagina_confirmar_dados_1(self):
+        self.informacoes_adicionais_frame.pack_forget()
+
+        self.pagina_confirmar_dados_1_frame = ctk.CTkFrame(master=self.janela, width=550, height=670, fg_color='#006CBB')
+        self.pagina_confirmar_dados_1_frame.pack_propagate(0)
+        self.pagina_confirmar_dados_1_frame.pack()
+
+        label_title = ctk.CTkLabel(master=self.pagina_confirmar_dados_1_frame, text='Confirmar Dados', font=('Arial', 32), text_color='white')
+        label_title.pack(pady=(30, 0))
+
+        self.label_nome = ctk.CTkLabel(master=self.pagina_confirmar_dados_1_frame, text='', font=('Arial', 20), text_color='white')
+        self.label_nome.pack(pady=(30, 0))
+
+        self.label_data_nascimento = ctk.CTkLabel(master=self.pagina_confirmar_dados_1_frame, text='', font=('Arial', 20), text_color='white')
+        self.label_data_nascimento.pack(pady=(20, 0))
+
+        self.label_genero = ctk.CTkLabel(master=self.pagina_confirmar_dados_1_frame, text='', font=('Arial', 20), text_color='white')
+        self.label_genero.pack(pady=(20, 0))
+
+        self.label_cpf = ctk.CTkLabel(master=self.pagina_confirmar_dados_1_frame, text='', font=('Arial', 20), text_color='white')
+        self.label_cpf.pack(pady=(20, 0))
+
+        self.label_rg = ctk.CTkLabel(master=self.pagina_confirmar_dados_1_frame, text='', font=('Arial', 20), text_color='white')
+        self.label_rg.pack(pady=(20, 0))
+
+        self.label_nacionalidade = ctk.CTkLabel(master=self.pagina_confirmar_dados_1_frame, text='', font=('Arial', 20), text_color='white')
+        self.label_nacionalidade.pack(pady=(20, 0))
+
+        self.label_naturalidade = ctk.CTkLabel(master=self.pagina_confirmar_dados_1_frame, text='', font=('Arial', 20), text_color='white')
+        self.label_naturalidade.pack(pady=(20, 0))
+
+        self.label_estado_civil = ctk.CTkLabel(master=self.pagina_confirmar_dados_1_frame, text='', font=('Arial', 20), text_color='white')
+        self.label_estado_civil.pack(pady=(20, 0))
+
+        self.inserir_dados_1()
+
+    def inserir_dados_1(self):
+        nome_completo = self.nome_completo_aluno.get().strip()
+        data_nascimento = self.data_nascimento.get().strip()
+        genero = self.genero.get()
+        cpf = self.cpf.get().strip()
+        rg = self.rg.get().strip()
+        nacionalidade = self.nacionalidade.get().strip()
+        naturalidade = self.naturalidade.get().strip()
+        estado_civil = self.estado_civil.get()
+
+        self.label_nome.configure(text=f'Nome Completo: {nome_completo}')
+        self.label_data_nascimento.configure(text=f'Data de Nascimento: {data_nascimento}')
+        self.label_genero.configure(text=f'Sexo: {genero}')
+        self.label_cpf.configure(text=f'CPF: {cpf}')
+        self.label_rg.configure(text=f'RG: {rg}')
+        self.label_nacionalidade.configure(text=f'Nacionalidade: {nacionalidade}')
+        self.label_naturalidade.configure(text=f'Naturalidade: {naturalidade}')
+        self.label_estado_civil.configure(text=f'Estado Civil: {estado_civil}')
+
+
+    def upload_fotos(self, filepath, doc_type):
+        global img
+        
+        img = Image.open(filepath)
+        img = img.resize((400, 400))
+        img = ImageTk.PhotoImage(img)
+
+
+
+        # Armazenar a imagem em formato binário
+        with open(filepath, "rb") as file:
+            self.selected_images[doc_type] = file.read()
 
 
 
@@ -851,22 +923,9 @@ class Application(DB_Usuarios):
     def voltar_da_consulta(self):
         self.pagina_consultar_alunos_frame.pack_forget()
         self.criar_pagina_principal()
-
-
-
     
-    def upload_fotos(self, filepath, doc_type):
-        global img
-        
-        img = Image.open(filepath)
-        img = img.resize((400, 400))
-        img = ImageTk.PhotoImage(img)
 
 
-
-        # Armazenar a imagem em formato binário
-        with open(filepath, "rb") as file:
-            self.selected_images[doc_type] = file.read()
 
     def side_bar(self):
 
